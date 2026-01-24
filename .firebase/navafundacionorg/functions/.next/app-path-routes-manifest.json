@@ -1,0 +1,15 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/about/page": "/about",
+  "/admin/home/page": "/admin/home",
+  "/admin/info/page": "/admin/info",
+  "/admin/movements/[id]/page": "/admin/movements/[id]",
+  "/admin/movements/page": "/admin/movements",
+  "/admin/page": "/admin",
+  "/favicon.ico/route": "/favicon.ico",
+  "/info/page": "/info",
+  "/movements/page": "/movements",
+  "/page": "/",
+  "/visit/page": "/visit"
+}
