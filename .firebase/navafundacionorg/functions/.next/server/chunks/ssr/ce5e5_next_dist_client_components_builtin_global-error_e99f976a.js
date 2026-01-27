@@ -1,3 +1,0 @@
-module.exports=[15425,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(5841);a.n(d("[project]/nava-website/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},997,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(5841);a.n(d("[project]/nava-website/node_modules/next/dist/client/components/builtin/global-error.js"))},8004,a=>{"use strict";a.i(15425);var b=a.i(997);a.n(b)}];
-
-//# sourceMappingURL=ce5e5_next_dist_client_components_builtin_global-error_e99f976a.js.map

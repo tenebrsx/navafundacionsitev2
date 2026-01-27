@@ -1,8 +1,0 @@
-[00:00:01.283] Server  LOG     ✓ Ready in 1021ms
-[00:00:05.391] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:02.592] Browser ERROR   Error fetching data: {"code":"unavailable","name":"FirebaseError"}
-[00:01:32.088] Server  LOG     ✓ Compiled in 803ms
-[00:01:41.829] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:51.619] Server  LOG     ✓ Compiled in 477ms
-[00:01:55.789] Browser ERROR   {"code":"auth/api-key-not-valid.-please-pass-a-valid-api-key.","customData":{},"name":"FirebaseError"}
-[00:01:57.394] Browser ERROR   {"code":"auth/api-key-not-valid.-please-pass-a-valid-api-key.","customData":{},"name":"FirebaseError"}
