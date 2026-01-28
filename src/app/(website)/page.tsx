@@ -6,7 +6,6 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import MagneticButton from "@/components/anim/MagneticButton";
 import ScrollRevealText from "@/components/anim/ScrollRevealText";
 import NavMorphLogo from "@/components/anim/NavMorphLogo";
-import PulsingGrid from "@/components/anim/PulsingGrid";
 
 export default function Home() {
     const { scrollY } = useScroll();
@@ -15,12 +14,11 @@ export default function Home() {
     return (
         <div className="w-full">
 
-            {/* Hero Section: The Building Animation */}
-            <section className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden border-b border-[#002FA7]">
-                <PulsingGrid />
+            {/* Hero Section: The Building Animation (Parallax/Sticky) */}
+            <section className="sticky top-0 z-0 w-full h-screen flex flex-col justify-center items-center overflow-hidden border-b border-[#002FA7]">
 
-                <div className="relative z-10 flex flex-col items-center gap-8 md:gap-12">
-                    <div className="w-64 h-24 md:w-96 md:h-32">
+                <div className="relative z-10 flex flex-col items-center gap-8 md:gap-12 w-full">
+                    <div className="w-[80vw] md:w-[50vw]">
                         <NavMorphLogo />
                     </div>
 
@@ -48,15 +46,15 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Content Stream: Simplified Shelf Layout (No Italics) */}
-            <div className="flex flex-col w-full">
+            {/* Content Stream: Curtain Effect */}
+            <div className="relative z-10 bg-[#F4F4F2] flex flex-col w-full border-t border-[#002FA7]">
 
                 {/* Current Exhibition */}
                 <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
                     <div className="w-full md:w-1/3 flex flex-col justify-between">
                         <div>
                             <span className="font-mono text-xs uppercase tracking-widest block mb-4 opacity-50">On View</span>
-                            <h2 className="font-serif text-3xl md:text-4xl text-[#002FA7]">
+                            <h2 className="text-3xl md:text-4xl text-[#002FA7]">
                                 Echoes of the Unseen
                             </h2>
                         </div>
@@ -81,7 +79,7 @@ export default function Home() {
                     <div className="w-full md:w-1/3 flex flex-col justify-between text-right items-end">
                         <div>
                             <span className="font-mono text-xs uppercase tracking-widest block mb-4 opacity-50">Journal</span>
-                            <h2 className="font-serif text-3xl md:text-4xl text-[#002FA7]">
+                            <h2 className="text-3xl md:text-4xl text-[#002FA7]">
                                 Theory of Form
                             </h2>
                         </div>
@@ -100,7 +98,7 @@ export default function Home() {
                 {/* Programs List */}
                 <div className="py-12 md:py-24 flex flex-col px-4 sm:px-12 md:px-24">
                     <div className="mb-12 flex justify-between items-end">
-                        <h2 className="font-serif text-4xl md:text-5xl text-[#002FA7]">Programs</h2>
+                        <h2 className="text-4xl md:text-5xl text-[#002FA7]">Programs</h2>
                         <Link href="/events" className="hidden md:block uppercase tracking-widest text-xs font-bold hover:underline decoration-1 underline-offset-4 text-[#002FA7]">View Full Calendar</Link>
                     </div>
 
@@ -113,7 +111,7 @@ export default function Home() {
                             <div key={i} className="group flex flex-col md:flex-row justify-between items-start md:items-center py-6 border-b border-[#002FA7] hover:bg-[#002FA7] hover:text-white px-0 md:px-4 transition-colors cursor-pointer -mx-0 md:-mx-4">
                                 <div className="flex flex-col md:flex-row gap-2 md:gap-8 md:items-baseline">
                                     <span className="font-mono text-xs opacity-50 group-hover:opacity-80 w-24">{item.type}</span>
-                                    <h3 className="text-xl md:text-2xl font-serif">{item.title}</h3>
+                                    <h3 className="text-xl md:text-2xl">{item.title}</h3>
                                 </div>
                                 <span className="font-mono text-xs uppercase tracking-widest mt-2 md:mt-0 opacity-60 group-hover:opacity-100">{item.date}</span>
                             </div>

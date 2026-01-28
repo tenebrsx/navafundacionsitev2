@@ -24,17 +24,23 @@ export const metadata: Metadata = {
   description: "Narrativa Alternativa Foundation - Dominican Republic",
 };
 
+import SmoothScroll from "@/components/anim/SmoothScroll";
+import CustomCursor from "@/components/anim/CustomCursor";
+import NoiseOverlay from "@/components/anim/NoiseOverlay";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${ibmPlexSerif.variable} antialiased flex flex-col min-h-screen font-sans`}
-      >
-        {children}
+    <html lang="en" className={`${inter.variable} ${ibmPlexSerif.variable}`}>
+      <body className="antialiased bg-[#F4F4F2] text-[#002FA7] md:cursor-none">
+        <SmoothScroll>
+          <NoiseOverlay />
+          <CustomCursor />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

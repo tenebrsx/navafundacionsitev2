@@ -16,7 +16,7 @@ export default function ArchivePage() {
     return (
         <div className="min-h-screen bg-white text-[#002FA7] pt-32 pb-24 px-4 md:px-6 font-sans">
             <header className="mb-24 max-w-7xl mx-auto">
-                <h1 className="text-6xl md:text-9xl font-serif uppercase leading-[0.8] tracking-tighter mb-8">
+                <h1 className="text-6xl md:text-9xl uppercase leading-[0.8] tracking-tighter mb-8">
                     Archive
                 </h1>
                 <div className="border-t border-[#002FA7] pt-6 flex justify-between font-mono text-xs uppercase tracking-widest">
@@ -45,7 +45,7 @@ export default function ArchivePage() {
                         <div className="col-span-3 md:col-span-2 font-mono text-xs border border-[#002FA7]/30 group-hover:border-white/30 rounded-full px-2 py-0.5 w-fit">
                             {item.type}
                         </div>
-                        <div className="col-span-7 md:col-span-8 text-xl md:text-3xl font-serif uppercase leading-none">
+                        <div className="col-span-7 md:col-span-8 text-xl md:text-3xl uppercase leading-none">
                             {item.title}
                         </div>
                     </motion.div>

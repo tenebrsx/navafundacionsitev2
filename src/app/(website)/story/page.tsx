@@ -12,7 +12,7 @@ export default function StoryPage() {
             <div className="mb-12 md:mb-24">
                 <ScrollRevealText
                     text="Our Story"
-                    className="text-[12vw] leading-[0.8] font-serif tracking-tighter text-[#002FA7] mix-blend-multiply"
+                    className="text-[12vw] leading-[0.8] tracking-tighter text-[#002FA7] mix-blend-multiply"
                     el="h1"
                 />
             </div>
@@ -23,7 +23,7 @@ export default function StoryPage() {
                     <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-4">Mission</span>
                 </div>
                 <div className="w-full md:w-2/3">
-                    <p className="font-serif text-2xl md:text-4xl text-[#002FA7] leading-tight">
+                    <p className="text-2xl md:text-4xl text-[#002FA7] leading-tight">
                         We are building a living archive for the future. Nava Fundacion promotes alternative narratives in art and culture, connecting the Dominican Republic with the global contemporary discourse.
                     </p>
                 </div>
@@ -38,7 +38,7 @@ export default function StoryPage() {
                 </div>
                 <div className="w-full md:w-1/2 flex flex-col justify-center order-1 md:order-2">
                     <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-6">Origins</span>
-                    <h2 className="font-serif text-3xl md:text-4xl text-[#002FA7] mb-8">
+                    <h2 className="text-3xl md:text-4xl text-[#002FA7] mb-8">
                         From Collective to Foundation
                     </h2>
                     <p className="text-sm md:text-base leading-relaxed opacity-80 max-w-md">
@@ -55,7 +55,7 @@ export default function StoryPage() {
                 <div className="w-24 h-24 mb-8 text-[#002FA7]">
                     <NavMorphLogo />
                 </div>
-                <h2 className="font-serif text-2xl md:text-3xl text-[#002FA7] max-w-2xl leading-relaxed">
+                <h2 className="text-2xl md:text-3xl text-[#002FA7] max-w-2xl leading-relaxed">
                     "To create a space where the archive is not a dusty room, but a generator of new ideas."
                 </h2>
                 <span className="font-mono text-xs uppercase tracking-widest opacity-60 mt-6">- Founder's Vision</span>

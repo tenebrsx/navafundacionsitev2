@@ -37,14 +37,14 @@ export default function TeamPage() {
         <div className="w-full">
             <ScrollRevealText
                 text="Team"
-                className="text-[12vw] leading-[0.8] font-serif tracking-tighter text-[#002FA7] mix-blend-multiply mb-12 md:mb-24"
+                className="text-[12vw] leading-[0.8] tracking-tighter text-[#002FA7] mix-blend-multiply mb-12 md:mb-24"
                 el="h1"
             />
 
             <div className="flex flex-col gap-12 md:gap-24">
 
                 {/* Introduction / Statement */}
-                <div className="max-w-2xl text-lg md:text-2xl leading-relaxed font-serif text-[#002FA7] border-b border-[#002FA7] pb-12">
+                <div className="max-w-2xl text-lg md:text-2xl leading-relaxed text-[#002FA7] border-b border-[#002FA7] pb-12">
                     <p>
                         Our team constitutes a collective of curators, researchers, and architects dedicated to rewriting the narrative of Caribbean art from the inside out.
                     </p>
@@ -58,7 +58,7 @@ export default function TeamPage() {
                             <div className={`w-full aspect-[3/4] md:aspect-[4/5] ${member.image} relative overflow-hidden border border-[#002FA7]/10`}>
                                 <div className="absolute inset-0 bg-[#002FA7]/0 group-hover:bg-[#002FA7]/10 transition-colors duration-500"></div>
                                 {/* Initial of First Name as placeholder graphic */}
-                                <div className="absolute bottom-4 left-4 text-[10vw] md:text-[8vw] font-serif text-[#002FA7] leading-none opacity-10 group-hover:opacity-20 transition-opacity">
+                                <div className="absolute bottom-4 left-4 text-[10vw] md:text-[8vw] text-[#002FA7] leading-none opacity-10 group-hover:opacity-20 transition-opacity">
                                     {member.name.charAt(0)}
                                 </div>
                             </div>
@@ -69,7 +69,7 @@ export default function TeamPage() {
                                     <span className="font-mono text-xs uppercase tracking-widest opacity-60">{member.role}</span>
                                     <ArrowUpRight size={16} className="text-[#002FA7] opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
-                                <h2 className="text-3xl font-serif text-[#002FA7]">{member.name}</h2>
+                                <h2 className="text-3xl text-[#002FA7]">{member.name}</h2>
                                 <p className="text-sm leading-relaxed opacity-80 max-w-sm mt-2">
                                     {member.bio}
                                 </p>
@@ -83,7 +83,7 @@ export default function TeamPage() {
                     <h3 className="font-mono text-xs uppercase tracking-widest opacity-60">Advisory Board</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-[#002FA7] pt-8">
                         {["Dr. Alanna Heiss", "Hans Ulrich Obrist", "Mariana Yampolsky"].map((name, i) => (
-                            <div key={i} className="text-xl font-serif text-[#002FA7]">{name}</div>
+                            <div key={i} className="text-xl text-[#002FA7]">{name}</div>
                         ))}
                     </div>
                 </div>

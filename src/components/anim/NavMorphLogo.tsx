@@ -21,7 +21,7 @@ export default function NavMorphLogo() {
             }, 4000);
         };
         // Initial delay before starting cycle
-        const timer = setTimeout(cycle, 1000);
+        const timer = setTimeout(cycle, 100);
         return () => clearTimeout(timer);
     }, []);
 
@@ -73,7 +73,7 @@ export default function NavMorphLogo() {
             <motion.div
                 animate={mode}
                 variants={containerVariants}
-                className="w-full max-w-lg origin-center"
+                className="w-full origin-center"
             >
                 <svg
                     viewBox="0 0 400 120"
@@ -86,7 +86,7 @@ export default function NavMorphLogo() {
                         fill="transparent"
                         stroke="#002FA7"
                         strokeWidth="15"
-                        strokeLinecap="round"
+                        strokeLinecap="butt"
                         strokeLinejoin="round"
                         variants={pathVariants.n}
                         transition={commonTransition}
@@ -97,7 +97,7 @@ export default function NavMorphLogo() {
                         fill="transparent"
                         stroke="#002FA7"
                         strokeWidth="15"
-                        strokeLinecap="round"
+                        strokeLinecap="butt"
                         strokeLinejoin="round"
                         variants={pathVariants.a1}
                         transition={commonTransition}
@@ -108,7 +108,7 @@ export default function NavMorphLogo() {
                         fill="transparent"
                         stroke="#002FA7"
                         strokeWidth="15"
-                        strokeLinecap="round"
+                        strokeLinecap="butt"
                         strokeLinejoin="round"
                         variants={pathVariants.v}
                         transition={commonTransition}
@@ -119,7 +119,7 @@ export default function NavMorphLogo() {
                         fill="transparent"
                         stroke="#002FA7"
                         strokeWidth="15"
-                        strokeLinecap="round"
+                        strokeLinecap="butt"
                         strokeLinejoin="round"
                         variants={pathVariants.a2}
                         transition={commonTransition}

@@ -68,7 +68,7 @@ function MovementsPageContent() {
         <div className="flex flex-col gap-12 pb-24 text-[#002FA7]">
             <ScrollRevealText
                 text="Events Archive"
-                className="text-[10vw] leading-[0.85] font-serif tracking-tighter text-[#002FA7] mix-blend-multiply"
+                className="text-[10vw] leading-[0.85] tracking-tighter text-[#002FA7] mix-blend-multiply"
                 el="h1"
             />
 
@@ -108,7 +108,7 @@ function EventList({ items }: { items: Event[] }) {
                         <span className="font-mono text-xs md:text-sm w-8 opacity-60 group-hover:opacity-100">0{index + 1}</span>
                         <div className="flex flex-col md:flex-row md:items-baseline md:gap-8">
                             <span className="md:w-32 font-mono text-xs md:text-sm uppercase opacity-60 group-hover:opacity-100 mb-2 md:mb-0">{event.date}</span>
-                            <h2 className="text-2xl md:text-3xl font-serif group-hover:translate-x-4 transition-transform duration-300">
+                            <h2 className="text-2xl md:text-3xl group-hover:translate-x-4 transition-transform duration-300">
                                 {event.title}
                             </h2>
                         </div>

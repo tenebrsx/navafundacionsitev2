@@ -69,7 +69,7 @@ export default function ProjectsPage() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-24 gap-6 md:gap-0">
                 <ScrollRevealText
                     text="Projects"
-                    className="text-[12vw] leading-[0.8] font-serif tracking-tighter text-[#002FA7] mix-blend-multiply"
+                    className="text-[12vw] leading-[0.8] tracking-tighter text-[#002FA7] mix-blend-multiply"
                     el="h1"
                 />
 
@@ -113,7 +113,7 @@ export default function ProjectsPage() {
                                     <span className="font-mono text-xs uppercase tracking-widest opacity-60">{project.type}</span>
                                     <span className="font-mono text-xs uppercase tracking-widest opacity-60">{project.year}</span>
                                 </div>
-                                <h2 className="text-2xl md:text-3xl font-serif text-[#002FA7] leading-tight group-hover:underline decoration-1 underline-offset-4">
+                                <h2 className="text-2xl md:text-3xl text-[#002FA7] leading-tight group-hover:underline decoration-1 underline-offset-4">
                                     {project.title}
                                 </h2>
                                 <p className="text-sm leading-relaxed opacity-80 max-w-sm">
@@ -135,7 +135,7 @@ export default function ProjectsPage() {
                         >
                             <div className="flex flex-col md:flex-row gap-2 md:gap-12 md:items-baseline w-1/2">
                                 <span className="font-mono text-xs uppercase opacity-50 group-hover:opacity-80 w-24 flex-shrink-0">{project.year}</span>
-                                <h2 className="text-xl md:text-3xl font-serif leading-tight">{project.title}</h2>
+                                <h2 className="text-xl md:text-3xl leading-tight">{project.title}</h2>
                             </div>
 
                             <div className="flex flex-col md:flex-row gap-4 md:items-center mt-4 md:mt-0 w-1/2 md:justify-end">
