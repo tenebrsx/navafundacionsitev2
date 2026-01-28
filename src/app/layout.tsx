@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 // import Footer is handled in layout body
 // import AdminToolbar is handled in AdminLayer
-import AdminLayer from "@/components/admin/AdminLayer";
 import Footer from "@/components/Footer";
 import { LanguageProvider } from "@/context/LanguageContext";
 

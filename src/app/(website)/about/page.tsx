@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import VisualBlock from "@/components/admin/visual/VisualBlock";
-import VisualBlockList from "@/components/admin/visual/VisualBlockList";
-import { useVisualEditor } from "@/components/admin/visual/VisualEditorContext";
 
 interface AboutContent {
     directorName: string;
@@ -37,14 +34,8 @@ const defaultContent: AboutContent = {
 };
 
 export default function AboutPage() {
-    const { isEditing, setCurrentDoc } = useVisualEditor();
     const [rawDoc, setRawDoc] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-
-    // Register Document for Airlock
-    useEffect(() => {
-        setCurrentDoc({ id: "about", path: "content" });
-    }, [setCurrentDoc]);
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -63,25 +54,23 @@ export default function AboutPage() {
         fetchContent();
     }, []);
 
-    // Airlock Logic: Merge Draft if Editing
-    const content: AboutContent = (isEditing && rawDoc?.draft)
-        ? { ...defaultContent, ...rawDoc, ...rawDoc.draft }
-        : { ...defaultContent, ...(rawDoc || {}) };
+    // Merge logic (simplified, no drafts)
+    const content: AboutContent = { ...defaultContent, ...(rawDoc || {}) };
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center text-[#002FA7]">Loading...</div>;
     }
 
     return (
         <div className="max-w-4xl mx-auto flex flex-col gap-12 md:gap-24">
             {/* Header Block */}
             <section>
-                <h1 className="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] mb-8 text-nava-blue">
-                    <span className="bg-nava-blue px-2 text-white mr-2">Narrativa</span>
+                <h1 className="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] mb-8 text-[#002FA7]">
+                    <span className="bg-[#002FA7] px-2 text-white mr-2">Narrativa</span>
                     <br className="md:hidden" />
-                    <span className="bg-nava-blue text-white px-2">Alternativa</span>
+                    <span className="bg-[#002FA7] text-white px-2">Alternativa</span>
                 </h1>
-                <div className="text-xl md:text-3xl font-medium leading-tight max-w-2xl">
+                <div className="text-xl md:text-3xl font-medium leading-tight max-w-2xl text-[#002FA7]">
                     <p>
                         Nava is an experimental foundation focused on decentralizing the contemporary art narrative in the Caribbean.
                     </p>
@@ -92,140 +81,87 @@ export default function AboutPage() {
             <div className="flex flex-col gap-24 font-mono">
 
                 {/* Director Section */}
-                <VisualBlock
-                    id="about"
-                    path="content"
-                    data={content}
-                    schema={{
-                        directorName: { type: "text", label: "Director Name" },
-                        directorBio: { type: "textarea", label: "Director Bio" },
-                        directorImage: { type: "image", label: "Director Image" }
-                    }}
-                    render={(data: any) => (
-                        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
-                            <div className="relative aspect-[3/4] bg-nava-blue/5 border border-nava-blue/20">
-                                {data.directorImage ? (
-                                    <img src={data.directorImage} alt={`${data.directorName} - Director`} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 mix-blend-multiply" />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-nava-blue/40 uppercase text-xs">No Image</div>
-                                )}
-                            </div>
-                            <div className="flex flex-col gap-6 text-nava-blue">
-                                <h2 className="text-4xl font-black uppercase tracking-tighter">
-                                    Directora <span className="text-nava-blue/60">Nava</span>
-                                </h2>
-                                <h3 className="text-2xl font-bold uppercase">{data.directorName}</h3>
-                                <p className="text-sm md:text-base leading-relaxed text-nava-blue/80">
-                                    {data.directorBio}
-                                </p>
-                            </div>
-                        </section>
-                    )}
-                />
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
+                    <div className="relative aspect-[3/4] bg-[#002FA7]/5 border border-[#002FA7]/20">
+                        {content.directorImage ? (
+                            <img src={content.directorImage} alt={`${content.directorName} - Director`} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 mix-blend-multiply" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[#002FA7]/40 uppercase text-xs">No Image</div>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-6 text-[#002FA7]">
+                        <h2 className="text-4xl font-black uppercase tracking-tighter">
+                            Directora <span className="text-[#002FA7]/60">Nava</span>
+                        </h2>
+                        <h3 className="text-2xl font-bold uppercase">{content.directorName}</h3>
+                        <p className="text-sm md:text-base leading-relaxed text-[#002FA7]/80">
+                            {content.directorBio}
+                        </p>
+                    </div>
+                </section>
 
                 {/* History Section */}
-                <VisualBlock
-                    id="about"
-                    path="content"
-                    data={content}
-                    schema={{
-                        historyTitle1: { type: "text", label: "History Title 1" },
-                        historyText1: { type: "textarea", label: "History Text 1" },
-                        historyTitle2: { type: "text", label: "History Title 2" },
-                        historyText2: { type: "textarea", label: "History Text 2" }
-                    }}
-                    render={(data: any) => (
-                        <section className="border-t border-nava-blue pt-12 text-nava-blue">
-                            <h2 className="text-4xl font-black uppercase tracking-tighter mb-8">
-                                Trayectoria
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="flex flex-col gap-4">
-                                    <h3 className="font-bold text-xl uppercase">{data.historyTitle1}</h3>
-                                    <p className="text-nava-blue/60 font-mono text-sm">Phase I</p>
-                                    <p className="text-sm text-nava-blue/80">
-                                        {data.historyText1}
-                                    </p>
-                                </div>
-                                <div className="flex flex-col gap-4">
-                                    <h3 className="font-bold text-xl uppercase">{data.historyTitle2}</h3>
-                                    <p className="text-nava-blue/60 font-mono text-sm">Phase II</p>
-                                    <p className="text-sm text-nava-blue/80">
-                                        {data.historyText2}
-                                    </p>
-                                </div>
-                            </div>
-                        </section>
-                    )}
-                />
+                <section className="border-t border-[#002FA7] pt-12 text-[#002FA7]">
+                    <h2 className="text-4xl font-black uppercase tracking-tighter mb-8">
+                        Trayectoria
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="flex flex-col gap-4">
+                            <h3 className="font-bold text-xl uppercase">{content.historyTitle1}</h3>
+                            <p className="text-[#002FA7]/60 font-mono text-sm">Phase I</p>
+                            <p className="text-sm text-[#002FA7]/80">
+                                {content.historyText1}
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-4">
+                            <h3 className="font-bold text-xl uppercase">{content.historyTitle2}</h3>
+                            <p className="text-[#002FA7]/60 font-mono text-sm">Phase II</p>
+                            <p className="text-sm text-[#002FA7]/80">
+                                {content.historyText2}
+                            </p>
+                        </div>
+                    </div>
+                </section>
 
                 {/* Core Principles */}
-                <VisualBlock
-                    id="about"
-                    path="content"
-                    data={content}
-                    schema={{
-                        principle1: { type: "text", label: "Principle 1" },
-                        principle2: { type: "text", label: "Principle 2" },
-                        principle3: { type: "text", label: "Principle 3" },
-                        principle4: { type: "text", label: "Principle 4" }
-                    }}
-                    render={(data: any) => (
-                        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-sm md:text-base font-mono border-t border-nava-blue pt-12 text-nava-blue">
-                            <div className="flex flex-col gap-6">
-                                <h2 className="font-bold uppercase underline decoration-nava-blue decoration-4 underline-offset-4">Core Principles</h2>
-                                <ul className="list-disc list-inside space-y-2 text-nava-blue/80">
-                                    <li>{data.principle1}</li>
-                                    <li>{data.principle2}</li>
-                                    <li>{data.principle3}</li>
-                                    <li>{data.principle4}</li>
-                                </ul>
-                            </div>
-                        </section>
-                    )}
-                />
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-sm md:text-base font-mono border-t border-[#002FA7] pt-12 text-[#002FA7]">
+                    <div className="flex flex-col gap-6">
+                        <h2 className="font-bold uppercase underline decoration-[#002FA7] decoration-4 underline-offset-4">Core Principles</h2>
+                        <ul className="list-disc list-inside space-y-2 text-[#002FA7]/80">
+                            <li>{content.principle1}</li>
+                            <li>{content.principle2}</li>
+                            <li>{content.principle3}</li>
+                            <li>{content.principle4}</li>
+                        </ul>
+                    </div>
+                </section>
 
                 {/* News / Blog Section */}
-                <section className="border-t border-nava-blue pt-12">
-                    <h2 className="text-4xl font-black uppercase tracking-tighter mb-8 bg-nava-blue text-white inline-block px-2">
+                <section className="border-t border-[#002FA7] pt-12">
+                    <h2 className="text-4xl font-black uppercase tracking-tighter mb-8 bg-[#002FA7] text-white inline-block px-2">
                         Latest updates
                     </h2>
-                    <VisualBlockList
-                        id="about"
-                        path="content"
-                        fieldPath="blogPosts"
-                        items={(content as any).blogPosts || []}
-                        itemSchema={{
-                            title: { type: "text", label: "Post Title" },
-                            date: { type: "text", label: "Date" },
-                            body: { type: "textarea", label: "Content" },
-                            image: { type: "image", label: "Image (Optional)" }
-                        }}
-                        defaultItemData={{
-                            title: "New Post",
-                            date: "Jan 01",
-                            body: "Write something..."
-                        }}
-                        direction="grid"
-                        renderItem={(data, i) => (
-                            <div className="bg-transparent p-6 flex flex-col gap-4 border border-nava-blue/20 hover:border-nava-blue transition-colors h-full">
+                    {/* Render Only */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {((content as any).blogPosts || []).map((data: any, i: number) => (
+                            <div key={i} className="bg-transparent p-6 flex flex-col gap-4 border border-[#002FA7]/20 hover:border-[#002FA7] transition-colors h-full">
                                 {data.image && (
                                     <div className="aspect-video w-full overflow-hidden mb-2 mix-blend-multiply">
                                         <img src={data.image} alt={data.title} className="w-full h-full object-cover" />
                                     </div>
                                 )}
-                                <span className="font-mono text-xs text-nava-blue/60">{data.date}</span>
-                                <h3 className="text-xl font-bold uppercase leading-tight text-nava-blue">{data.title}</h3>
-                                <p className="text-sm text-nava-blue/80 line-clamp-4 leading-relaxed">{data.body}</p>
+                                <span className="font-mono text-xs text-[#002FA7]/60">{data.date}</span>
+                                <h3 className="text-xl font-bold uppercase leading-tight text-[#002FA7]">{data.title}</h3>
+                                <p className="text-sm text-[#002FA7]/80 line-clamp-4 leading-relaxed">{data.body}</p>
                             </div>
-                        )}
-                    />
+                        ))}
+                    </div>
                 </section>
             </div>
 
             {/* Decorative Footer */}
-            <section className="border-t border-nava-blue pt-4">
-                <p className="font-mono text-xs uppercase text-nava-blue/60">
+            <section className="border-t border-[#002FA7] pt-4">
+                <p className="font-mono text-xs uppercase text-[#002FA7]/60">
                     Nava Fundacion — Santo Domingo, D.R.
                 </p>
             </section>
