@@ -113,40 +113,40 @@ export default function Home() {
         </div>
 
         {/* Sidebar (Right 1/3 - Hardcoded Upcoming Events) */}
-        <div className="md:col-span-4 flex flex-col gap-12 border-l border-zinc-900 md:pl-8">
+        <div className="md:col-span-4 flex flex-col gap-12 border-l border-nava-blue/20 md:pl-8">
 
           {/* Upcoming List */}
           <div className="relative">
-            <div className="flex justify-between items-center border-b border-gray-800 pb-2 mb-6">
-              <h2 className="font-mono text-sm uppercase text-gray-400">Upcoming</h2>
-              <Link href="/admin/events" className="text-[10px] uppercase text-nava-green font-bold hover:underline opacity-0 hover:opacity-100 transition-opacity">Manage Events</Link>
+            <div className="flex justify-between items-center border-b border-nava-blue/20 pb-2 mb-6">
+              <h2 className="font-mono text-sm uppercase text-nava-blue/60">Upcoming</h2>
+              <Link href="/admin/events" className="text-[10px] uppercase text-nava-blue font-bold hover:underline opacity-0 hover:opacity-100 transition-opacity">Manage Events</Link>
             </div>
 
             {loading ? (
-              <div className="text-zinc-600">Loading schedule...</div>
+              <div className="text-nava-blue/60">Loading schedule...</div>
             ) : events.length > 0 ? (
               <div className="flex flex-col gap-6">
                 {events.map((item) => (
                   <Link key={item.id} href={`/events/${item.id}`} className="group cursor-pointer block">
-                    <span className="block font-mono text-xs text-nava-green mb-1">{item.date}</span>
-                    <h3 className="text-xl font-bold uppercase leading-tight group-hover:underline decoration-1 underline-offset-4">{item.title}</h3>
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-1">{item.description}</p>
+                    <span className="block font-mono text-xs text-nava-blue/80 mb-1">{item.date}</span>
+                    <h3 className="text-xl font-bold uppercase leading-tight group-hover:underline decoration-1 underline-offset-4 text-nava-blue">{item.title}</h3>
+                    <p className="text-xs text-nava-blue/60 mt-1 line-clamp-1">{item.description}</p>
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="text-zinc-600 text-sm">No upcoming events scheduled.</div>
+              <div className="text-nava-blue/60 text-sm">No upcoming events scheduled.</div>
             )}
 
-            <div className="mt-4 pt-4 border-t border-zinc-900 md:hidden">
-              <Link href="/admin/events" className="w-full block bg-zinc-900 text-zinc-400 text-center py-2 text-xs uppercase font-bold hover:bg-zinc-800">Manage Events</Link>
+            <div className="mt-4 pt-4 border-t border-nava-blue/20 md:hidden">
+              <Link href="/admin/events" className="w-full block bg-nava-blue/10 text-nava-blue text-center py-2 text-xs uppercase font-bold hover:bg-nava-blue/20">Manage Events</Link>
             </div>
           </div>
 
-          <div className="bg-white text-black p-6 mt-auto">
+          <div className="bg-nava-blue text-white p-6 mt-auto">
             <h3 className="font-bold uppercase text-xl mb-4 leading-none">Subscribe to our newsletter</h3>
-            <input type="email" placeholder="EMAIL ADDRESS" className="w-full border-b border-black bg-transparent py-2 outline-none placeholder:text-zinc-500 mb-4" />
-            <button className="text-xs font-bold uppercase border border-black px-4 py-2 hover:bg-black hover:text-white transition-colors">Submit</button>
+            <input type="email" placeholder="EMAIL ADDRESS" className="w-full border-b border-white bg-transparent py-2 outline-none placeholder:text-white/50 mb-4" />
+            <button className="text-xs font-bold uppercase border border-white px-4 py-2 hover:bg-white hover:text-nava-blue transition-colors">Submit</button>
           </div>
 
         </div>

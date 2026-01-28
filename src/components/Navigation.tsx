@@ -6,64 +6,17 @@ import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-interface MenuLink {
-    label: string;
-    href: string;
-}
-
-interface MenuColumn {
-    id: string;
-    title: string;
-    links: MenuLink[];
-}
-
-const defaultMenu: MenuColumn[] = [
-    {
-        id: "about",
-        title: "About",
-        links: [
-            { label: "Mission", href: "/mission" },
-            { label: "Team", href: "/team" },
-            { label: "History", href: "/about" }
-        ]
-    },
-    {
-        id: "programs",
-        title: "Programs",
-        links: [
-            { label: "Events", href: "/events" },
-            { label: "Exhibitions", href: "/events" },
-            { label: "Research", href: "/events" }
-        ]
-    },
-    {
-        id: "involve",
-        title: "Get Involved",
-        links: [
-            { label: "Mailing List", href: "/info" },
-            { label: "Contact", href: "/info" },
-            { label: "Admin", href: "/admin" }
-        ]
-    }
+// Hardcoded for now to match the "Editorial" design proposal
+const editorialMenu = [
+    { label: "INDEX", href: "/" },
+    { label: "JOURNAL", href: "/journal" },
+    { label: "ARCHIVE", href: "/archive" },
+    { label: "MANIFESTO", href: "/manifesto" },
+    { label: "PROGRAMS", href: "/programs" },
+    { label: "VISIT", href: "/visit" },
 ];
 
 export default function Navigation({ onClose }: { onClose: () => void }) {
-    const [columns, setColumns] = useState<MenuColumn[]>(defaultMenu);
-
-    useEffect(() => {
-        const fetchNav = async () => {
-            try {
-                const docRef = doc(db, "content", "navigation");
-                const snap = await getDoc(docRef);
-                if (snap.exists() && snap.data().columns) {
-                    setColumns(snap.data().columns);
-                }
-            } catch (error) {
-                console.error("Error fetching navigation:", error);
-            }
-        };
-        fetchNav();
-    }, []);
 
     return (
         <motion.div
@@ -71,35 +24,40 @@ export default function Navigation({ onClose }: { onClose: () => void }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/95 flex flex-col items-center justify-center p-4"
+            className="fixed inset-0 z-40 bg-[#002FA7] text-white flex flex-col p-4 md:p-6"
         >
-            <nav className={`w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-${Math.min(columns.length, 4)} gap-12 p-8 text-left h-full items-start pt-32`}>
+            {/* Background Grain/Grid could be added here */}
 
-                {columns.map((col) => (
-                    <div key={col.id} className="flex flex-col gap-6">
-                        <h3 className="text-zinc-500 font-mono text-sm uppercase mb-4 border-b border-zinc-800 pb-2">
-                            {col.title}
-                        </h3>
-                        {col.links.map((link, i) => (
-                            <Link
-                                key={i}
-                                href={link.href}
-                                onClick={onClose}
-                                className="text-3xl font-bold uppercase hover:text-zinc-400 transition-colors"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-                    </div>
-                ))}
-            </nav>
-
-            {/* Decorative details */}
-            <div className="absolute bottom-8 left-8 text-xs md:text-sm text-gray-500 font-mono">
-                EST. 2026 — D.R.
+            <div className="flex-1 flex flex-col justify-center items-center">
+                <nav className="flex flex-col items-center gap-4 md:gap-6">
+                    {editorialMenu.map((link, i) => (
+                        <Link
+                            key={i}
+                            href={link.href}
+                            onClick={onClose}
+                            className="text-5xl md:text-8xl font-bold uppercase tracking-tighter hover:text-white/50 transition-colors"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
+                </nav>
             </div>
-            <div className="absolute bottom-8 right-8 text-xs md:text-sm text-gray-500 font-mono text-right">
-                NARRATIVA<br />ALTERNATIVA
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 border-t border-white/20 pt-6 font-mono text-xs uppercase tracking-widest">
+                <div>
+                    <h4 className="opacity-50 mb-2">Social</h4>
+                    <ul className="flex flex-col gap-1">
+                        <li><a href="#" className="hover:underline">Instagram</a></li>
+                        <li><a href="#" className="hover:underline">Twitter</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 className="opacity-50 mb-2">Contact</h4>
+                    <p>info@nava.org</p>
+                </div>
+                <div className="hidden md:block text-right opacity-50">
+                    NARRATIVA ALTERNATIVA © 2026
+                </div>
             </div>
         </motion.div>
     );

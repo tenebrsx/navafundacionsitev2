@@ -140,7 +140,7 @@ export default function VisualBlockList({
                 <div className="mt-8 flex justify-center">
                     <button
                         onClick={handleAddItem}
-                        className="bg-nava-green text-black px-6 py-3 rounded-full font-bold uppercase hover:scale-105 transition-transform shadow-lg flex items-center gap-2"
+                        className="bg-nava-green text-white px-6 py-3 rounded-full font-bold uppercase hover:scale-105 transition-transform shadow-lg flex items-center gap-2"
                     >
                         <span className="text-xl leading-none">+</span> Add item
                     </button>
@@ -149,15 +149,15 @@ export default function VisualBlockList({
 
             {/* Undo Toast */}
             {showUndo && (
-                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[200] bg-zinc-900 border border-zinc-800 text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-4 animate-in slide-in-from-bottom-4">
+                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[200] bg-nava-blue border border-white text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-4 animate-in slide-in-from-bottom-4">
                     <span className="text-sm font-bold uppercase">Item Deleted</span>
                     <button
                         onClick={handleUndo}
-                        className="bg-nava-green text-black px-4 py-1 rounded-full text-xs font-black uppercase hover:bg-white transition-colors"
+                        className="bg-white text-nava-blue px-4 py-1 rounded-full text-xs font-black uppercase hover:bg-gray-200 transition-colors"
                     >
                         Undo
                     </button>
-                    <button onClick={() => setShowUndo(false)} className="text-zinc-500 hover:text-white">✕</button>
+                    <button onClick={() => setShowUndo(false)} className="text-white/70 hover:text-white">✕</button>
                 </div>
             )}
         </div>

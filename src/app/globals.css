@@ -1,24 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --background: #020617;
-  /* Navy Dark Blue (Slate 950) */
-  --foreground: #ffffff;
+  --background: #F4F4F2;
+  /* Warm Paper */
+  --foreground: #002FA7;
+  /* Nava Blue */
+  --nava-blue: #002FA7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-nava-green: #ffffff;
-  /* Replaced green with white as requested */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-nava-blue: var(--nava-blue);
+  /* Keeping nava-green as white for compatibility if needed, but primary is now blue */
+  --color-nava-green: #002FA7;
+  --font-sans: var(--font-inter);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #020617;
-    --foreground: #ffffff;
+    --background: #ffffff;
+    --foreground: #002FA7;
   }
 }
 
@@ -39,10 +41,21 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-nava-green);
-  border: 2px solid black;
+  background: var(--color-nava-blue);
+  border: 2px solid #ffffff;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: black;
+  background: #001f7a;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif), serif;
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }

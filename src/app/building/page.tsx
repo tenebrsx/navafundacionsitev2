@@ -171,7 +171,7 @@ const NavMorphLogo = () => {
     );
 };
 
-export default function ComingSoon() {
+export default function BuildingPage() {
     const [email, setEmail] = useState("");
     const [notified, setNotified] = useState(false);
     const [loading, setLoading] = useState(false);

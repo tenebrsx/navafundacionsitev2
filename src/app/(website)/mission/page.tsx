@@ -69,7 +69,7 @@ export default function MissionPage() {
         ));
     };
 
-    if (loading) return <div className="text-white p-8">Loading Mission...</div>;
+    if (loading) return <div className="text-nava-blue p-8">Loading Mission...</div>;
 
     return (
         <div className="max-w-4xl mx-auto flex flex-col gap-12 md:gap-24 pt-12 md:pt-24 pb-24">
@@ -85,10 +85,10 @@ export default function MissionPage() {
                 }}
                 render={(data: any) => (
                     <section>
-                        <h1 className="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] mb-8 group-hover:text-nava-green transition-colors">
+                        <h1 className="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] mb-8 group-hover:text-nava-blue/70 transition-colors text-nava-blue">
                             {renderHeader(data.manifestoTitle)}
                         </h1>
-                        <div className="text-xl md:text-3xl font-medium leading-tight max-w-2xl text-zinc-300">
+                        <div className="text-xl md:text-3xl font-medium leading-tight max-w-2xl text-nava-blue/80">
                             {data.manifestoBody}
                         </div>
                     </section>
@@ -107,10 +107,10 @@ export default function MissionPage() {
                     principle4: { type: "text", label: "Principle 4" }
                 }}
                 render={(data: any) => (
-                    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-sm md:text-base font-mono border-t border-white pt-12">
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-sm md:text-base font-mono border-t border-nava-blue pt-12 text-nava-blue">
                         <div className="flex flex-col gap-6">
-                            <h2 className="font-bold uppercase underline decoration-nava-green decoration-4 underline-offset-4 mb-4">Core Principles</h2>
-                            <ul className="list-disc list-inside space-y-4 text-zinc-300 text-lg">
+                            <h2 className="font-bold uppercase underline decoration-nava-blue decoration-4 underline-offset-4 mb-4">Core Principles</h2>
+                            <ul className="list-disc list-inside space-y-4 text-nava-blue/80 text-lg">
                                 <li>{data.principle1}</li>
                                 <li>{data.principle2}</li>
                                 <li>{data.principle3}</li>
@@ -118,7 +118,7 @@ export default function MissionPage() {
                             </ul>
                         </div>
                         <div className="flex flex-col gap-6 justify-center">
-                            <p className="text-zinc-500 text-sm">
+                            <p className="text-nava-blue/50 text-sm">
                                 "We are not just building an exhibition; we are building an infrastructure for the future of Caribbean art."
                             </p>
                         </div>
