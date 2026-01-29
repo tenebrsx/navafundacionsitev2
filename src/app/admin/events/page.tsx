@@ -87,54 +87,68 @@ export default function EventsList() {
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {events.map((event) => (
-                        <div key={event.id} className="bg-white border border-gray-200 rounded-xl p-6 flex items-center justify-between hover:shadow-md transition group">
-                            <div className="flex items-center gap-6">
-                                <div className="w-16 h-16 bg-gray-100 rounded-lg relative overflow-hidden shrink-0">
-                                    {event.image ? (
-                                        <Image src={event.image} alt={event.title} fill className="object-cover" />
-                                    ) : (
-                                        <div className="h-full w-full flex items-center justify-center text-gray-400">
-                                            <CalIcon size={24} />
-                                        </div>
-                                    )}
+                        <div key={event.id} className="bg-white rounded-xl border border-[#002FA7]/10 hover:border-[#002FA7] transition-all duration-300 group relative flex flex-col overflow-hidden hover:shadow-[0_0_30px_rgba(0,47,167,0.08)]">
+
+                            {/* Image Header */}
+                            <div className="h-48 w-full bg-[#002FA7]/5 relative overflow-hidden">
+                                {event.image ? (
+                                    <Image src={event.image} alt={event.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                                ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-[#002FA7]/20">
+                                        <CalIcon size={32} strokeWidth={1} />
+                                        <span className="text-[10px] font-mono mt-2 uppercase tracking-widest">No Image</span>
+                                    </div>
+                                )}
+
+                                {/* Overlay Gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60"></div>
+
+                                {/* Actions */}
+                                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y--2 group-hover:translate-y-0 z-20">
+                                    <Link
+                                        href={`/admin/events/editor?id=${event.id}`}
+                                        className="p-2 bg-white/90 backdrop-blur text-[#002FA7] rounded-lg hover:bg-[#002FA7] hover:text-white transition-colors shadow-lg"
+                                    >
+                                        <Edit size={16} />
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDeleteClick(event.id)}
+                                        className="p-2 bg-white/90 backdrop-blur text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors shadow-lg"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
                                 </div>
-                                <div>
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <h3 className="text-lg font-bold text-slate-900 leading-none">{event.title}</h3>
-                                        <StatusBadge status={event.status} />
-                                    </div>
-                                    <div className="flex items-center gap-4 text-xs text-gray-500 font-medium uppercase tracking-wide">
-                                        <span className="flex items-center gap-1"><CalIcon size={12} className="text-blue-500" /> {event.date}</span>
-                                        <span className="flex items-center gap-1"><MapPin size={12} className="text-purple-500" /> {event.location}</span>
-                                    </div>
+
+                                <div className="absolute bottom-4 left-4 right-4">
+                                    <StatusBadge status={event.status} />
                                 </div>
                             </div>
 
-                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Link
-                                    href={`/admin/events/editor?id=${event.id}`}
-                                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                                >
-                                    <Edit size={18} />
-                                </Link>
-                                <button
-                                    onClick={() => handleDeleteClick(event.id)}
-                                    className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                                >
-                                    <Trash2 size={18} />
-                                </button>
+                            {/* Body */}
+                            <div className="p-6 flex-1 flex flex-col">
+                                <h3 className="text-xl font-bold text-[#002FA7] leading-tight mb-4 line-clamp-2">{event.title}</h3>
+
+                                <div className="mt-auto space-y-2">
+                                    <div className="flex items-center gap-3 text-xs font-mono uppercase tracking-widest text-[#002FA7]/70">
+                                        <CalIcon size={12} />
+                                        <span>{event.date}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 text-xs font-mono uppercase tracking-widest text-[#002FA7]/70">
+                                        <MapPin size={12} />
+                                        <span>{event.location}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
 
                     {events.length === 0 && (
-                        <div className="p-12 text-center border-2 border-dashed border-gray-200 rounded-xl">
-                            <CalIcon size={48} className="mx-auto text-gray-200 mb-4" />
-                            <h3 className="text-lg font-bold text-gray-400">No Events Found</h3>
-                            <p className="text-gray-400 text-sm mb-6">Create your first event to get started.</p>
-                            <Link href="/admin/events/editor?id=new" className="px-6 py-2 bg-slate-900 text-white rounded-lg font-bold text-xs uppercase hover:bg-black transition">
+                        <div className="col-span-full p-20 text-center flex flex-col items-center justify-center border border-dashed border-[#002FA7]/20 rounded-xl bg-[#F4F4F2]">
+                            <CalIcon size={48} className="mx-auto text-[#002FA7]/20 mb-4" />
+                            <p className="text-[#002FA7]/40 font-mono text-sm uppercase tracking-widest mb-4">No events scheduled</p>
+                            <Link href="/admin/events/editor?id=new" className="px-6 py-3 bg-[#002FA7] text-white rounded-lg font-bold text-sm tracking-wide hover:opacity-90 transition-opacity">
                                 Create Event
                             </Link>
                         </div>

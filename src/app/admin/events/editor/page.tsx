@@ -27,7 +27,8 @@ function EventEditorContent() {
         description: "",
         image: "",
         status: "draft",
-        ticketLink: ""
+        ticketLink: "",
+        featured: false
     });
 
     // Auto-Save Hook handles drafts
@@ -39,7 +40,7 @@ function EventEditorContent() {
                 try {
                     const docSnap = await getDoc(doc(db, "events", paramId));
                     if (docSnap.exists()) {
-                        setFormData({ ...docSnap.data() } as any);
+                        setFormData({ featured: false, ...docSnap.data() } as any);
                     } else {
                         showToast("Event not found", "error");
                         router.push("/admin/events");
@@ -112,6 +113,19 @@ function EventEditorContent() {
                     placeholder="Date"
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg"
                 />
+
+                <div className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-lg transition-colors hover:border-[#002FA7]/30">
+                    <input
+                        type="checkbox"
+                        id="featured"
+                        checked={!!(formData as any).featured}
+                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked } as any)}
+                        className="w-5 h-5 text-[#002FA7] rounded focus:ring-[#002FA7] cursor-pointer accent-[#002FA7]"
+                    />
+                    <label htmlFor="featured" className="text-sm font-bold text-gray-700 select-none cursor-pointer flex-1">
+                        Feature on Homepage (Current Exhibition)
+                    </label>
+                </div>
                 <textarea
                     rows={5}
                     value={formData.description}

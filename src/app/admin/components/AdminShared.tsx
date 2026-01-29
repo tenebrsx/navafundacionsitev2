@@ -47,13 +47,13 @@ export function StatusBadge({ status }: { status: string }) {
     const isPublished = status === "published";
     return (
         <span className={`
-            px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border flex items-center gap-2
+            px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border flex items-center gap-2 w-fit
             ${isPublished
-                ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
+                ? "bg-[#002FA7]/5 text-[#002FA7] border-[#002FA7]/20"
                 : "bg-amber-50 text-amber-700 border-amber-200/60"
             }
         `}>
-            <span className={`inline-block w-1.5 h-1.5 rounded-full ${isPublished ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+            <span className={`inline-block w-1.5 h-1.5 rounded-full ${isPublished ? "bg-[#002FA7]" : "bg-amber-500"}`}></span>
             {status || "draft"}
         </span>
     );

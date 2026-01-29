@@ -8,6 +8,9 @@ import ScrollRevealText from "@/components/anim/ScrollRevealText";
 import NavMorphLogo from "@/components/anim/NavMorphLogo";
 import HomePrograms from "@/components/HomePrograms";
 
+import HomeExhibition from "@/components/HomeExhibition";
+import HomeJournal from "@/components/HomeJournal";
+
 export default function Home() {
     const { scrollY } = useScroll();
     const logoY = useTransform(scrollY, [0, 300], [0, 50]);
@@ -51,50 +54,10 @@ export default function Home() {
             <div className="relative z-10 bg-[#F4F4F2] flex flex-col w-full border-t border-[#002FA7]">
 
                 {/* Current Exhibition */}
-                <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
-                    <div className="w-full md:w-1/3 flex flex-col justify-between">
-                        <div>
-                            <span className="font-mono text-xs uppercase tracking-widest block mb-4 opacity-50">On View</span>
-                            <h2 className="text-3xl md:text-4xl text-[#002FA7]">
-                                Echoes of the Unseen
-                            </h2>
-                        </div>
-                        <p className="mt-8 text-sm md:text-base leading-relaxed opacity-80 max-w-xs font-sans">
-                            A curatorial exploration of silence and space in post-digital Caribbean aesthetics.
-                        </p>
-                    </div>
-                    <div className="w-full md:w-2/3 h-[400px] md:h-[600px] bg-[#E5E5E0] relative overflow-hidden group border border-[#002FA7]/10">
-                        <div className="absolute inset-0 bg-[#002FA7]/5 group-hover:bg-[#002FA7]/0 transition-colors duration-500"></div>
-                        <div className="absolute bottom-6 right-6">
-                            <MagneticButton>
-                                <button className="bg-white text-[#002FA7] px-6 py-3 rounded-full uppercase text-xs tracking-widest font-bold hover:bg-[#002FA7] hover:text-white transition-colors">
-                                    View Exhibition
-                                </button>
-                            </MagneticButton>
-                        </div>
-                    </div>
-                </div>
+                <HomeExhibition />
 
                 {/* Journal */}
-                <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row-reverse gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
-                    <div className="w-full md:w-1/3 flex flex-col justify-between text-right items-end">
-                        <div>
-                            <span className="font-mono text-xs uppercase tracking-widest block mb-4 opacity-50">Journal</span>
-                            <h2 className="text-3xl md:text-4xl text-[#002FA7]">
-                                Theory of Form
-                            </h2>
-                        </div>
-                        <MagneticButton>
-                            <Link href="/blog" className="flex items-center gap-2 group mt-8">
-                                <span className="uppercase tracking-widest text-xs font-bold text-[#002FA7] group-hover:underline decoration-1 underline-offset-4">Read Article</span>
-                                <ArrowUpRight size={16} className="text-[#002FA7]" />
-                            </Link>
-                        </MagneticButton>
-                    </div>
-                    <div className="w-full md:w-2/3 h-[300px] md:h-[400px] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10">
-                        <span className="font-mono text-xs opacity-30 text-[#002FA7]">Editorial Image Placeholder</span>
-                    </div>
-                </div>
+                <HomeJournal />
 
                 {/* Programs List */}
                 <HomePrograms />
