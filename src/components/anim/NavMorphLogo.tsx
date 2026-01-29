@@ -76,51 +76,51 @@ export default function NavMorphLogo() {
                 className="w-full origin-center"
             >
                 <svg
-                    viewBox="0 0 400 120"
+                    viewBox="0 0 380 110"
                     className="w-full h-auto"
                     style={{ overflow: "visible" }}
                 >
                     {/* N */}
                     <motion.path
-                        d="M 35 100 V 20 L 95 100 V 20"
+                        d="M 25 100 V 10 L 105 100 V 10"
                         fill="transparent"
                         stroke="#002FA7"
-                        strokeWidth="15"
+                        strokeWidth="32"
                         strokeLinecap="butt"
-                        strokeLinejoin="round"
+                        strokeLinejoin="miter"
                         variants={pathVariants.n}
                         transition={commonTransition}
                     />
                     {/* A */}
                     <motion.path
-                        d="M 125 100 L 155 20 L 185 100 M 135 75 H 175"
+                        d="M 130 100 L 165 10 L 200 100 M 148 68 H 182"
                         fill="transparent"
                         stroke="#002FA7"
-                        strokeWidth="15"
+                        strokeWidth="32"
                         strokeLinecap="butt"
-                        strokeLinejoin="round"
+                        strokeLinejoin="miter"
                         variants={pathVariants.a1}
                         transition={commonTransition}
                     />
                     {/* V */}
                     <motion.path
-                        d="M 215 20 L 245 100 L 275 20"
+                        d="M 225 10 L 260 100 L 295 10"
                         fill="transparent"
                         stroke="#002FA7"
-                        strokeWidth="15"
+                        strokeWidth="32"
                         strokeLinecap="butt"
-                        strokeLinejoin="round"
+                        strokeLinejoin="miter"
                         variants={pathVariants.v}
                         transition={commonTransition}
                     />
                     {/* A */}
                     <motion.path
-                        d="M 305 100 L 335 20 L 365 100 M 315 75 H 355"
+                        d="M 320 100 L 355 10 L 390 100 M 338 68 H 372"
                         fill="transparent"
                         stroke="#002FA7"
-                        strokeWidth="15"
+                        strokeWidth="32"
                         strokeLinecap="butt"
-                        strokeLinejoin="round"
+                        strokeLinejoin="miter"
                         variants={pathVariants.a2}
                         transition={commonTransition}
                     />

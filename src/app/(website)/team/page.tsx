@@ -71,7 +71,8 @@ function TeamPageContent() {
     const coreTeam = displayTeam.filter(m => !m.type || m.type === "Core");
 
     // Static Advisory for now unless in DB
-    const advisoryBoard = ["Dr. Alanna Heiss", "Hans Ulrich Obrist", "Mariana Yampolsky"];
+    // Static Advisory for now unless in DB
+    const advisoryBoard: string[] = [];
 
     return (
         <div className="w-full">
@@ -81,7 +82,7 @@ function TeamPageContent() {
                 el="h1"
             />
 
-            <div className="flex flex-col gap-12 md:gap-24">
+            <div className="flex flex-col gap-12 md:gap-24 pb-32">
 
                 {/* Introduction / Statement */}
                 <div className="max-w-2xl text-lg md:text-2xl leading-relaxed text-[#002FA7] border-b border-[#002FA7] pb-12">
@@ -94,7 +95,7 @@ function TeamPageContent() {
                     <div className="py-24 text-center font-mono text-sm text-[#002FA7] animate-pulse">Loading Team...</div>
                 ) : (
                     /* Team Grid */
-                    <StaggeredGrid className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16" staggerDelay={0.1}>
+                    <StaggeredGrid className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16" staggerDelay={0.1}>
                         {coreTeam.map((member, i) => (
                             <Link href={`/team/${member.id}`} key={member.id} className="group flex flex-col gap-6 cursor-pointer block">
                                 {/* Image Placeholder */}
@@ -126,14 +127,16 @@ function TeamPageContent() {
                 )}
 
                 {/* Advisory Board List (Simple) */}
-                <div className="flex flex-col gap-8 pt-12">
-                    <h3 className="font-mono text-xs uppercase tracking-widest opacity-60">Advisory Board</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-[#002FA7] pt-8">
-                        {advisoryBoard.map((name, i) => (
-                            <div key={i} className="text-xl text-[#002FA7]">{name}</div>
-                        ))}
+                {advisoryBoard.length > 0 && (
+                    <div className="flex flex-col gap-8 pt-12">
+                        <h3 className="font-mono text-xs uppercase tracking-widest opacity-60">Advisory Board</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-[#002FA7] pt-8">
+                            {advisoryBoard.map((name, i) => (
+                                <div key={i} className="text-xl text-[#002FA7]">{name}</div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
             </div>
         </div>

@@ -22,10 +22,10 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
     const isUrl = member.image?.startsWith('http') || member.image?.startsWith('/');
 
     return (
-        <article className="min-h-screen text-[#002FA7]">
+        <article className="min-h-screen text-[#002FA7] pb-32">
             {/* Header / Nav */}
             <div className="mb-12 border-b border-[#002FA7] pb-8">
-                <MagneticButton>
+                <MagneticButton className="w-fit inline-block">
                     <Link href="/team" className="flex items-center gap-2 group w-fit">
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                         <span className="font-mono text-xs uppercase tracking-widest">Back to Team</span>

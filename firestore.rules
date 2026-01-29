@@ -8,7 +8,11 @@ service cloud.firestore {
 
     match /{document=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.email == 'nava@nava-fundacion.org' ||
+        request.auth.token.email == 'tenebrsx@gmail.com' ||
+        request.auth.token.email == 'danicontalba@gmail.com'
+      );
     }
   }
 }
