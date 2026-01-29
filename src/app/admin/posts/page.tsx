@@ -80,7 +80,13 @@ export default function BlogPostsList() {
                             </div>
 
                             <div className="pt-4 mt-auto border-t border-gray-50">
-                                <span className="text-xs text-blue-600 font-medium">Read Post &rarr;</span>
+                                <Link
+                                    href={`/blog/${post.id}`}
+                                    target="_blank"
+                                    className="text-xs text-blue-600 font-medium hover:underline inline-flex items-center gap-1"
+                                >
+                                    Read Post &rarr;
+                                </Link>
                             </div>
                         </div>
                     ))}

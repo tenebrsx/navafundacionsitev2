@@ -31,7 +31,8 @@ function ProjectEditor() {
         mainImage: "",
         gallery: [] as string[],
         category: "Art Fair",
-        location: ""
+        location: "",
+        featured: false
     });
 
     // Auto-Save Hook
@@ -48,7 +49,8 @@ function ProjectEditor() {
                         ...prev,
                         ...data,
                         // Ensure we don't accidentally overwrite strict fields if missing
-                        status: data.status || "draft"
+                        status: data.status || "draft",
+                        featured: data.featured || false
                     } as any));
                 } else {
                     showToast("Project not found", "error");
@@ -208,6 +210,22 @@ function ProjectEditor() {
                 </div>
 
                 <div className="space-y-8">
+                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                        <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">Visibility</label>
+                        <div className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-lg transition-colors hover:border-[#002FA7]/30">
+                            <input
+                                type="checkbox"
+                                id="featured"
+                                checked={!!(formData as any).featured}
+                                onChange={(e) => setFormData({ ...formData, featured: e.target.checked } as any)}
+                                className="w-5 h-5 text-[#002FA7] rounded focus:ring-[#002FA7] cursor-pointer accent-[#002FA7]"
+                            />
+                            <label htmlFor="featured" className="text-sm font-bold text-gray-700 select-none cursor-pointer flex-1">
+                                Feature on Homepage
+                            </label>
+                        </div>
+                    </div>
+
                     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
                         <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">Main Cover Image</label>
                         <ImageUpload

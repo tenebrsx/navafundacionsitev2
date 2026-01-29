@@ -6,68 +6,66 @@ import { db } from "@/lib/firebase";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 
-interface Event {
-    id: string;
-    title: string;
-    title_es?: string;
-    type?: string;
-    type_es?: string;
-    date: string;
-}
+const STATIC_EVENTS = [
+    {
+        id: "intro-screening",
+        type: "Screening",
+        type_es: "Proyección",
+        title: "Caribbean Futurism",
+        title_es: "Futurismo Caribeño",
+        date: "2025"
+    },
+    {
+        id: "artist-talk",
+        type: "Talk",
+        type_es: "Charla",
+        title: "Artist Talk: Elena Martinez",
+        title_es: "Charla con Artista: Elena Martinez",
+        date: "2025"
+    },
+    {
+        id: "workshop-1",
+        type: "Workshop",
+        type_es: "Taller",
+        title: "Digital Archiving",
+        title_es: "Archivado Digital",
+        date: "2025"
+    }
+];
 
 export default function HomePrograms() {
     const { t } = useLanguage();
-    const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState(true);
+    // Initialize with static fallback to prevent empty state/flicker
+    const [events, setEvents] = useState<any[]>(STATIC_EVENTS);
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 // Fetch latest 3 published events. 
-                // Note: orderBy might require an index. If it fails, remove orderBy and sort client side.
-                // Using simple fetch for now to match the "Archive" page logic if index is missing.
                 const q = query(
                     collection(db, "events"),
                     where("status", "==", "published"),
-                    // orderBy("date", "desc"), // Keeping it simple to avoid index error for now
+                    orderBy("date", "desc"),
                     limit(3)
                 );
 
                 const snapshot = await getDocs(q);
-                const data = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                })) as Event[];
 
-                setEvents(data);
+                if (!snapshot.empty) {
+                    const data = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    setEvents(data);
+                }
             } catch (error) {
-                console.error("Error fetching home programs:", error);
-            } finally {
-                setLoading(false);
+                console.error("Error fetching programs, using fallback:", error);
+                // Fallback remains active
             }
         };
 
         fetchEvents();
     }, []);
-
-    if (loading) {
-        return (
-            <div className="py-12 md:py-24 flex flex-col px-4 sm:px-12 md:px-24">
-                <div className="mb-12 flex justify-between items-end">
-                    <h2 className="text-4xl md:text-5xl text-[#002FA7]">{t("Programs", "Programas")}</h2>
-                </div>
-                <div className="border-t border-[#002FA7]/20 animate-pulse space-y-4 pt-4">
-                    <div className="h-12 bg-[#002FA7]/5 w-full rounded"></div>
-                    <div className="h-12 bg-[#002FA7]/5 w-full rounded"></div>
-                    <div className="h-12 bg-[#002FA7]/5 w-full rounded"></div>
-                </div>
-            </div>
-        );
-    }
-
-    if (events.length === 0) {
-        return null; // or empty state
-    }
 
     return (
         <div className="py-12 md:py-24 flex flex-col px-4 sm:px-12 md:px-24">

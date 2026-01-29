@@ -17,6 +17,8 @@ interface Project {
     description: string;
     imageUrl?: string;
     location?: string;
+    featured?: boolean;
+    order?: number;
 }
 
 function ProjectsPageContent() {
@@ -34,6 +36,20 @@ function ProjectsPageContent() {
                     id: doc.id,
                     ...doc.data(),
                 })) as Project[];
+
+                // Client-side Sort: Featured -> Manual Order -> Default
+                data.sort((a, b) => {
+                    // 1. Featured first
+                    const fA = a.featured ? 1 : 0;
+                    const fB = b.featured ? 1 : 0;
+                    if (fA !== fB) return fB - fA; // Descending (true first)
+
+                    // 2. Manual Order (Ascending)
+                    const orderA = typeof a.order === 'number' ? a.order : 9999;
+                    const orderB = typeof b.order === 'number' ? b.order : 9999;
+                    return orderA - orderB;
+                });
+
                 setProjects(data);
             } catch (error) {
                 console.error("Error fetching projects:", error);
