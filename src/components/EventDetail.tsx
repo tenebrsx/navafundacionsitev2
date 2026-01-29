@@ -8,7 +8,7 @@ interface Event {
     date: string;
     description: string;
     description_es?: string;
-    imageUrl?: string;
+    image?: string;
     startDate?: string;
     endDate?: string;
     type?: string;
@@ -45,8 +45,8 @@ export default function EventDetail({ event, upcomingEvents = [], backLink = "/e
                 <div className="md:col-span-8 flex flex-col gap-8">
                     {/* Hero Image */}
                     <div className="w-full aspect-video bg-[#F4F4F2] border border-[#002FA7]/20">
-                        {event.imageUrl ? (
-                            <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" />
+                        {event.image ? (
+                            <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-[#002FA7]/50 font-mono text-xs uppercase">
                                 No Image Available

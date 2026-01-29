@@ -12,7 +12,6 @@ interface TeamMember {
     longBio?: string;
     email?: string;
     image?: string;
-    imageUrl?: string;
 }
 
 interface TeamMemberDetailProps {
@@ -20,6 +19,8 @@ interface TeamMemberDetailProps {
 }
 
 export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
+    const isUrl = member.image?.startsWith('http') || member.image?.startsWith('/');
+
     return (
         <article className="min-h-screen text-[#002FA7]">
             {/* Header / Nav */}
@@ -36,9 +37,9 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
 
                 {/* Visual / Left Col */}
                 <div className="md:col-span-5">
-                    <div className={`w-full aspect-[3/4] ${member.image || "bg-zinc-100"} border border-[#002FA7]/10 overflow-hidden relative`}>
-                        {member.imageUrl && <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />}
-                        {!member.imageUrl && (
+                    <div className={`w-full aspect-[3/4] ${!isUrl && member.image ? member.image : 'bg-zinc-100'} border border-[#002FA7]/10 overflow-hidden relative`}>
+                        {isUrl && <img src={member.image} alt={member.name} className="w-full h-full object-cover" />}
+                        {!isUrl && (
                             <div className="absolute inset-0 flex items-center justify-center text-[#002FA7]/10 text-[15vw] font-bold leading-none">
                                 {member.name.charAt(0)}
                             </div>
@@ -72,7 +73,7 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
                                 <p key={i}>{para}</p>
                             ))
                         ) : (
-                            <p>{member.bio} [Full biography content pending update...]</p>
+                            <div className="whitespace-pre-wrap">{member.bio}</div>
                         )}
                     </div>
                 </div>

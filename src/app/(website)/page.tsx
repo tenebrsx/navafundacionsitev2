@@ -6,6 +6,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import MagneticButton from "@/components/anim/MagneticButton";
 import ScrollRevealText from "@/components/anim/ScrollRevealText";
 import NavMorphLogo from "@/components/anim/NavMorphLogo";
+import HomePrograms from "@/components/HomePrograms";
 
 export default function Home() {
     const { scrollY } = useScroll();
@@ -96,28 +97,7 @@ export default function Home() {
                 </div>
 
                 {/* Programs List */}
-                <div className="py-12 md:py-24 flex flex-col px-4 sm:px-12 md:px-24">
-                    <div className="mb-12 flex justify-between items-end">
-                        <h2 className="text-4xl md:text-5xl text-[#002FA7]">Programs</h2>
-                        <Link href="/events" className="hidden md:block uppercase tracking-widest text-xs font-bold hover:underline decoration-1 underline-offset-4 text-[#002FA7]">View Full Calendar</Link>
-                    </div>
-
-                    <div className="border-t border-[#002FA7]">
-                        {[
-                            { title: "Artist Residency: Summer 2025", type: "Open Call", date: "Deadline: Mar 15" },
-                            { title: "Curatorial Workshop", type: "Symposium", date: "Feb 28" },
-                            { title: "Cinema Paradiso Screening", type: "Film", date: "Feb 14" }
-                        ].map((item, i) => (
-                            <div key={i} className="group flex flex-col md:flex-row justify-between items-start md:items-center py-6 border-b border-[#002FA7] hover:bg-[#002FA7] hover:text-white px-0 md:px-4 transition-colors cursor-pointer -mx-0 md:-mx-4">
-                                <div className="flex flex-col md:flex-row gap-2 md:gap-8 md:items-baseline">
-                                    <span className="font-mono text-xs opacity-50 group-hover:opacity-80 w-24">{item.type}</span>
-                                    <h3 className="text-xl md:text-2xl">{item.title}</h3>
-                                </div>
-                                <span className="font-mono text-xs uppercase tracking-widest mt-2 md:mt-0 opacity-60 group-hover:opacity-100">{item.date}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <HomePrograms />
 
             </div>
         </div>

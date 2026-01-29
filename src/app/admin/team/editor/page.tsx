@@ -9,11 +9,13 @@ import { useToast } from "../../context/ToastContext";
 import ImageUpload from "../../components/ImageUpload";
 import { Loader2 } from "lucide-react";
 
+import { useAutoSave } from "@/hooks/useAutoSave";
+
 function TeamEditorContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const isNew = id === "new";
+    const paramId = searchParams.get("id");
+    const isNew = !paramId || paramId === "new";
 
     const { showToast } = useToast();
     const [loading, setLoading] = useState(!isNew);
@@ -29,11 +31,14 @@ function TeamEditorContent() {
         order: 0
     });
 
+    // Auto-Save Hook handles drafts
+    const { saveStatus, docId } = useAutoSave("team", isNew ? "new" : paramId, formData, isNew);
+
     useEffect(() => {
-        if (!isNew && id) {
+        if (!isNew && paramId) {
             const fetchMember = async () => {
                 try {
-                    const docSnap = await getDoc(doc(db, "team", id));
+                    const docSnap = await getDoc(doc(db, "team", paramId));
                     if (docSnap.exists()) {
                         setFormData({ ...docSnap.data() } as any);
                     } else {
@@ -48,28 +53,29 @@ function TeamEditorContent() {
             };
             fetchMember();
         }
-    }, [id, isNew, router, showToast]);
+    }, [paramId, isNew, router, showToast]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
-
         try {
-            const dataToSave = {
+            const now = new Date();
+            const payload = {
                 ...formData,
-                updatedAt: new Date(),
-                order: Number(formData.order) // Ensure number
+                status: "published",
+                updatedAt: now,
+                order: Number(formData.order)
             };
 
-            if (isNew) {
-                await addDoc(collection(db, "team"), {
-                    ...dataToSave,
-                    createdAt: new Date()
-                });
-                showToast("Team member created", "success");
-            } else if (id) {
-                await updateDoc(doc(db, "team", id), dataToSave);
-                showToast("Team member updated", "success");
+            // Use the auto-created ID if available, otherwise original param
+            const activeId = docId || paramId;
+
+            if (activeId && activeId !== 'new') {
+                await updateDoc(doc(db, "team", activeId), payload);
+                showToast("Team member published", "success");
+            } else {
+                await addDoc(collection(db, "team"), { ...payload, createdAt: now });
+                showToast("Team member created & published", "success");
             }
             router.push("/admin/team");
         } catch (error) {
@@ -80,36 +86,22 @@ function TeamEditorContent() {
         }
     };
 
-    const StatusToggle = () => (
-        <select
-            value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-            className={`
-                appearance-none px-4 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider cursor-pointer border outline-none focus:ring-2 focus:ring-offset-2 transition-all
-                ${formData.status === 'published'
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 focus:ring-emerald-500'
-                    : 'bg-amber-50 text-amber-700 border-amber-200 focus:ring-amber-500'}
-            `}
-        >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-        </select>
-    );
-
     if (loading) return <div className="p-12 text-center text-gray-400 font-mono text-sm animate-pulse">Loading member data...</div>;
 
     return (
         <form onSubmit={handleSubmit} className="relative">
             <PageHeader
                 title={isNew ? "New Team Member" : "Edit Profile"}
-                description={isNew ? "Add a new person to your team." : `Editing profile for ${formData.name}`}
+                description={
+                    <span className="flex items-center gap-2">
+                        {isNew ? "Add a new person to your team." : `Editing: ${formData.name}`}
+                        {saveStatus === 'saving' && <span className="text-xs text-[#002FA7] animate-pulse">(Saving draft...)</span>}
+                        {saveStatus === 'saved' && <span className="text-xs text-green-600">(Draft Saved)</span>}
+                    </span>
+                }
                 backHref="/admin/team"
                 sticky={true}
-            >
-                <div className="flex items-center gap-4">
-                    <StatusToggle />
-                </div>
-            </PageHeader>
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 px-8 md:px-12 pb-24">
                 {/* Main Content */}

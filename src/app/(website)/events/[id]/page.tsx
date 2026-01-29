@@ -3,13 +3,11 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 // Ensure static generation for this path
-export const dynamicParams = false; // Must be false for output: 'export'
-// but with output: export, we kinda imply dynamicParams=false effectively for the build? 
-// No, Next.js 'export' simply requires generateStaticParams to return ALL paths.
+export const dynamicParams = true; // Allow fallback for dev mode updates
 
 export async function generateStaticParams() {
     try {
-        const querySnapshot = await getDocs(collection(db, "movements"));
+        const querySnapshot = await getDocs(collection(db, "events"));
         return querySnapshot.docs.map((doc) => ({
             id: doc.id,
         }));

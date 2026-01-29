@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  output: 'export',
+  // output: 'export', // Commented out for dev flexibility. Uncomment for production build.
   images: {
     unoptimized: true,
   },

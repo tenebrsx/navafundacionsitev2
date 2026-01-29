@@ -35,7 +35,7 @@ export default function ImageUpload({ value, onChange, folder = "uploads" }: Ima
                 },
                 (error) => {
                     console.error("Upload error:", error);
-                    alert(`Upload failed: ${error.message}. Check Firebase Storage rules or CORS.`);
+                    alert(`Upload failed: ${error.message}. Since you are in Production Mode, you likely need to update your Storage Rules to 'allow read, write: if request.auth != null;'`);
                     setUploading(false);
                 },
                 async () => {

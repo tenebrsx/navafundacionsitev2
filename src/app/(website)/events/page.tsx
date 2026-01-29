@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { collection, getDocs, query, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, doc, getDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -12,7 +12,7 @@ interface Event {
     title: string;
     date: string;
     description: string;
-    imageUrl?: string;
+    image?: string;
     startDate?: string;
     endDate?: string;
     type?: string;
@@ -28,7 +28,8 @@ function MovementsPageContent() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const q = query(collection(db, "movements"));
+                // Fetch only published events
+                const q = query(collection(db, "events"), where("status", "==", "published"));
                 const querySnapshot = await getDocs(q);
                 const data = querySnapshot.docs.map((doc) => ({
                     id: doc.id,

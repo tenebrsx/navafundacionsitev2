@@ -5,7 +5,7 @@ import Link from "next/link";
 import StaggeredGrid from "@/components/anim/StaggeredGrid";
 import ScrollRevealText from "@/components/anim/ScrollRevealText";
 import { ArrowUpRight } from "lucide-react";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface TeamMember {
@@ -13,9 +13,10 @@ interface TeamMember {
     name: string;
     role: string;
     bio: string;
-    image?: string; // class or url
-    imageUrl?: string; // url preference
-    type?: "Core" | "Advisory"; // Optional distinction
+    image?: string;
+    status?: string;
+    order?: number;
+    type?: "Core" | "Advisory";
 }
 
 function TeamPageContent() {
@@ -26,7 +27,13 @@ function TeamPageContent() {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const q = query(collection(db, "team"));
+                // Fetch published team members
+                const q = query(
+                    collection(db, "team"),
+                    where("status", "==", "published"),
+                    orderBy("order", "asc")
+                );
+
                 const querySnapshot = await getDocs(q);
                 const data = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -34,7 +41,17 @@ function TeamPageContent() {
                 })) as TeamMember[];
                 setTeam(data);
             } catch (error) {
-                console.error("Error fetching team:", error);
+                console.error("Error fetching team details:", error);
+
+                // Fallback attempt without sort if index missing
+                try {
+                    const qFallback = query(collection(db, "team"), where("status", "==", "published"));
+                    const snap = await getDocs(qFallback);
+                    const data = snap.docs.map(d => ({ id: d.id, ...d.data() })) as TeamMember[];
+                    setTeam(data.sort((a, b) => (a.order || 0) - (b.order || 0)));
+                } catch (e) {
+                    console.error("Fallback failed", e);
+                }
             } finally {
                 setLoading(false);
             }
@@ -81,11 +98,11 @@ function TeamPageContent() {
                         {coreTeam.map((member, i) => (
                             <Link href={`/team/${member.id}`} key={member.id} className="group flex flex-col gap-6 cursor-pointer block">
                                 {/* Image Placeholder */}
-                                <div className={`w-full aspect-[3/4] md:aspect-[4/5] ${member.image || "bg-zinc-100"} relative overflow-hidden border border-[#002FA7]/10`}>
-                                    {member.imageUrl && <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" />}
+                                <div className={`w-full aspect-[3/4] md:aspect-[4/5] ${member.image ? '' : 'bg-zinc-100'} relative overflow-hidden border border-[#002FA7]/10`}>
+                                    {member.image && <img src={member.image} alt={member.name} className="w-full h-full object-cover" />}
                                     <div className="absolute inset-0 bg-[#002FA7]/0 group-hover:bg-[#002FA7]/10 transition-colors duration-500"></div>
                                     {/* Initial of First Name as placeholder graphic if no image */}
-                                    {!member.imageUrl && (
+                                    {!member.image && (
                                         <div className="absolute bottom-4 left-4 text-[10vw] md:text-[8vw] text-[#002FA7] leading-none opacity-10 group-hover:opacity-20 transition-opacity">
                                             {member.name.charAt(0)}
                                         </div>

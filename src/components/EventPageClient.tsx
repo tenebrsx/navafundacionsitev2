@@ -12,7 +12,7 @@ interface Event {
     date: string;
     description: string;
     description_es?: string;
-    imageUrl?: string;
+    image?: string;
     startDate?: string;
     endDate?: string;
     type?: string;
@@ -29,8 +29,8 @@ export default function EventPageClient({ id }: { id: string }) {
         const fetchCheck = async () => { // Renamed to avoid collision if needed, or just keep simple
             if (!id) return;
             try {
-                // Fetch ALL movements to populate the sidebar list as well
-                const q = query(collection(db, "movements"));
+                // Fetch ALL events to populate the sidebar list as well
+                const q = query(collection(db, "events"));
                 const querySnapshot = await getDocs(q);
                 const allEvents = querySnapshot.docs.map((doc) => ({
                     id: doc.id,

@@ -8,11 +8,13 @@ import { PageHeader, FormActions } from "../../components/AdminShared";
 import { useToast } from "../../context/ToastContext";
 import ImageUpload from "../../components/ImageUpload";
 
+import { useAutoSave } from "@/hooks/useAutoSave";
+
 function EventEditorContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const isNew = id === "new";
+    const paramId = searchParams.get("id");
+    const isNew = !paramId || paramId === "new";
 
     const { showToast } = useToast();
     const [loading, setLoading] = useState(!isNew);
@@ -28,11 +30,14 @@ function EventEditorContent() {
         ticketLink: ""
     });
 
+    // Auto-Save Hook handles drafts
+    const { saveStatus, docId } = useAutoSave("events", isNew ? "new" : paramId, formData, isNew);
+
     useEffect(() => {
-        if (!isNew && id) {
+        if (!isNew && paramId) {
             const fetchEvent = async () => {
                 try {
-                    const docSnap = await getDoc(doc(db, "events", id));
+                    const docSnap = await getDoc(doc(db, "events", paramId));
                     if (docSnap.exists()) {
                         setFormData({ ...docSnap.data() } as any);
                     } else {
@@ -47,19 +52,25 @@ function EventEditorContent() {
             };
             fetchEvent();
         }
-    }, [id, isNew, router, showToast]);
+    }, [paramId, isNew, router, showToast]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
         try {
-            const dataToSave = { ...formData, updatedAt: new Date() };
-            if (isNew) {
-                await addDoc(collection(db, "events"), { ...dataToSave, createdAt: new Date() });
-                showToast("Event created", "success");
-            } else if (id) {
-                await updateDoc(doc(db, "events", id), dataToSave);
-                showToast("Event updated", "success");
+            const now = new Date();
+            const payload = { ...formData, status: "published", updatedAt: now };
+
+            // Use the auto-created ID if available, otherwise original param
+            const activeId = docId || paramId;
+
+            if (activeId && activeId !== 'new') {
+                await updateDoc(doc(db, "events", activeId), payload);
+                showToast("Event published", "success");
+            } else {
+                // Should behave as fallback create if auto-save failed/lagged
+                await addDoc(collection(db, "events"), { ...payload, createdAt: now });
+                showToast("Event created & published", "success");
             }
             router.push("/admin/events");
         } catch (error) {
@@ -76,7 +87,13 @@ function EventEditorContent() {
         <form onSubmit={handleSubmit} className="relative px-8 md:px-12 pt-12 pb-24">
             <PageHeader
                 title={isNew ? "Create Event" : "Edit Event"}
-                description="Manage your event details."
+                description={
+                    <span className="flex items-center gap-2">
+                        {isNew ? "Manage your event details." : `Editing: ${formData.title}`}
+                        {saveStatus === 'saving' && <span className="text-xs text-[#002FA7] animate-pulse">(Saving draft...)</span>}
+                        {saveStatus === 'saved' && <span className="text-xs text-green-600">(Draft Saved)</span>}
+                    </span>
+                }
                 backHref="/admin/events"
             />
             <div className="space-y-6 max-w-2xl">
