@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import BrandShowcase from "@/components/BrandShowcase";
 
 interface AboutContent {
     directorName: string;
@@ -158,6 +159,9 @@ export default function AboutPage() {
                     </div>
                 </section>
             </div>
+
+            {/* Brand Identity / Logo Showcase */}
+            <BrandShowcase />
 
             {/* Decorative Footer */}
             <section className="border-t border-[#002FA7] pt-4">

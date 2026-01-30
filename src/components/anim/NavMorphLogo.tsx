@@ -5,127 +5,108 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function NavMorphLogo() {
-    const [mode, setMode] = useState<"logo" | "spinner">("logo");
+    const [phase, setPhase] = useState<"collapsed" | "straight" | "rotated">("collapsed");
 
     useEffect(() => {
+        let step = 0;
         const cycle = () => {
-            // Stay as logo for 4s
-            setTimeout(() => {
-                setMode("spinner");
-                // Stay as spinner for 4s (exactly 2 rotations)
-                setTimeout(() => {
-                    setMode("logo");
-                    // Loop
-                    cycle();
-                }, 4000);
-            }, 4000);
+            step++;
+            // Cycle: Collapsed -> Straight -> Collapsed -> Rotated -> Loop
+            const sequence = ["collapsed", "straight", "collapsed", "rotated"];
+            const nextState = sequence[step % sequence.length] as any;
+            setPhase(nextState);
         };
-        // Initial delay before starting cycle
-        const timer = setTimeout(cycle, 100);
-        return () => clearTimeout(timer);
+        // Shorter hold time for a snappier feel
+        const interval = setInterval(cycle, 3000); // Change state every 3s
+        return () => clearInterval(interval);
     }, []);
 
-    // Container rotates when in spinner mode
-    const containerVariants: any = {
-        logo: { rotate: 0 },
-        spinner: {
-            rotate: 360,
-            transition: {
-                duration: 2,
-                repeat: Infinity,
-                ease: [0, 0, 1, 1]
-            }
-        }
+    // Color
+    const color = "#002FA7";
+
+    // Path Definitions (Architectural / Geometric Style)
+    // All letters defined in a 100x100 box logic for consistency
+    // Then translated to positions
+
+    // Refined Paths - Cleaner, 'Swiss' Geometric Sans
+    // N: 20-90 x 10-90
+    const pathN = "M20 10 V90 H44 L70 50 V90 H90 V10 H66 L40 50 V10 H20Z";
+    // A: Wider, solid footing
+    const pathA = "M20 90 L55 10 L90 90 H68 L61 70 H49 L42 90 H20 Z M55 35 L58 55 H52 Z";
+    // V: Matching A
+    const pathV = "M20 10 L55 90 L90 10 H68 L55 50 L42 10 H20 Z";
+
+    // Smoother "Spring" physics for a premium feel
+    const transition = {
+        type: "spring",
+        stiffness: 70,
+        damping: 18,
+        mass: 1
     };
 
-    // Letter Transforms
-    const pathVariants = {
-        // N: Origin ~65 -> Target Center 200. Delta: 135
+    const variants = {
         n: {
-            logo: { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 },
-            spinner: { x: 135, y: 0, scale: 0.8, rotate: 90, opacity: 1 }
+            collapsed: { x: 145, opacity: 1 },
+            straight: { x: 0, opacity: 1 },
+            rotated: { x: 0, opacity: 1 }
         },
-        // A1: Origin ~155 -> Target Center 200. Delta: 45
         a1: {
-            logo: { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 },
-            spinner: { x: 45, y: 0, scale: 0.8, rotate: 180, opacity: 1 }
+            collapsed: { x: 145, opacity: 0, scale: 0.9, rotate: 0 },
+            straight: { x: 95, opacity: 1, scale: 1, rotate: 0 },
+            rotated: { x: 90, opacity: 1, scale: 1, rotate: -90 } // < pointing Left
         },
-        // V: Origin ~245 -> Target Center 200. Delta: -45
         v: {
-            logo: { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 },
-            spinner: { x: -45, y: 0, scale: 0.8, rotate: 270, opacity: 1 }
+            collapsed: { x: 145, opacity: 0, scale: 0.9 },
+            straight: { x: 195, opacity: 1, scale: 1 },
+            rotated: { x: 195, opacity: 1, scale: 1 }
         },
-        // A2: Origin ~335 -> Target Center 200. Delta: -135
         a2: {
-            logo: { x: 0, y: 0, scale: 1, rotate: 0, opacity: 1 },
-            spinner: { x: -135, y: 0, scale: 0.8, rotate: 0, opacity: 1 }
+            collapsed: { x: 145, opacity: 0, scale: 0.9, rotate: 0 },
+            straight: { x: 290, opacity: 1, scale: 1, rotate: 0 },
+            rotated: { x: 300, opacity: 1, scale: 1, rotate: 90 } // > pointing Right
         }
-    };
-
-    const commonTransition: any = {
-        duration: 1.2,
-        ease: [0.4, 0, 0.2, 1] // smooth cubic-bezier
     };
 
     return (
-        <div className="relative z-20 w-full max-w-full flex justify-center pointer-events-none">
-            {/* @ts-ignore */}
-            <motion.div
-                animate={mode}
-                variants={containerVariants}
-                className="w-full origin-center"
+        <div className="relative z-20 w-full flex justify-center h-[20vh] items-center pointer-events-none">
+            <motion.svg
+                viewBox="0 0 380 100"
+                className="h-full w-auto max-w-full"
+                animate={phase}
+                initial="collapsed"
             >
-                <svg
-                    viewBox="0 0 380 110"
-                    className="w-full h-auto"
-                    style={{ overflow: "visible" }}
-                >
-                    {/* N */}
-                    <motion.path
-                        d="M 25 100 V 10 L 105 100 V 10"
-                        fill="transparent"
-                        stroke="#002FA7"
-                        strokeWidth="32"
-                        strokeLinecap="butt"
-                        strokeLinejoin="miter"
-                        variants={pathVariants.n}
-                        transition={commonTransition}
-                    />
-                    {/* A */}
-                    <motion.path
-                        d="M 130 100 L 165 10 L 200 100 M 148 68 H 182"
-                        fill="transparent"
-                        stroke="#002FA7"
-                        strokeWidth="32"
-                        strokeLinecap="butt"
-                        strokeLinejoin="miter"
-                        variants={pathVariants.a1}
-                        transition={commonTransition}
-                    />
-                    {/* V */}
-                    <motion.path
-                        d="M 225 10 L 260 100 L 295 10"
-                        fill="transparent"
-                        stroke="#002FA7"
-                        strokeWidth="32"
-                        strokeLinecap="butt"
-                        strokeLinejoin="miter"
-                        variants={pathVariants.v}
-                        transition={commonTransition}
-                    />
-                    {/* A */}
-                    <motion.path
-                        d="M 320 100 L 355 10 L 390 100 M 338 68 H 372"
-                        fill="transparent"
-                        stroke="#002FA7"
-                        strokeWidth="32"
-                        strokeLinecap="butt"
-                        strokeLinejoin="miter"
-                        variants={pathVariants.a2}
-                        transition={commonTransition}
-                    />
-                </svg>
-            </motion.div>
+                {/* Letter N */}
+                <motion.path
+                    d={pathN}
+                    fill={color}
+                    variants={variants.n}
+                    transition={transition}
+                />
+
+                {/* Letter A (First) */}
+                <motion.path
+                    d={pathA}
+                    fill={color}
+                    variants={variants.a1}
+                    transition={{ ...transition, delay: phase !== "collapsed" ? 0.1 : 0 }}
+                />
+
+                {/* Letter V */}
+                <motion.path
+                    d={pathV}
+                    fill={color}
+                    variants={variants.v}
+                    transition={{ ...transition, delay: phase !== "collapsed" ? 0.2 : 0 }}
+                />
+
+                {/* Letter A (Last) */}
+                <motion.path
+                    d={pathA}
+                    fill={color}
+                    variants={variants.a2}
+                    transition={{ ...transition, delay: phase !== "collapsed" ? 0.3 : 0 }}
+                />
+            </motion.svg>
         </div>
     );
 }

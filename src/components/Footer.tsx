@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NavaLogo from "@/components/anim/NavaLogo";
 
 export default function Footer() {
     return (
@@ -7,7 +8,12 @@ export default function Footer() {
 
                 {/* About Section */}
                 <div className="flex flex-col gap-6">
-                    <h3 className="text-2xl md:text-3xl font-medium uppercase tracking-tight">About Nava</h3>
+                    <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-12">
+                            <NavaLogo color="#002FA7" />
+                        </div>
+                        <h3 className="text-2xl md:text-3xl font-medium uppercase tracking-tight">About Nava</h3>
+                    </div>
                     <div className="w-full h-px bg-[#002FA7]/20 relative overflow-hidden">
                         {/* Decorative squiggle or line */}
                         <div className="absolute top-0 left-0 w-full h-full bg-[url('/squiggle.svg')] bg-repeat-x opacity-20"></div>
