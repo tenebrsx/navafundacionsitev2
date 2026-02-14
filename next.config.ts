@@ -3,13 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  // output: 'export', // Commented out for dev flexibility. Uncomment for production build.
+  output: 'export', // Enabled for Firebase Hosting (Static)
   images: {
     unoptimized: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
+  /* Headers moved to firebase.json or disabled for static export
   async headers() {
     return [
       {
@@ -25,6 +26,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  */
 };
 
 export default nextConfig;

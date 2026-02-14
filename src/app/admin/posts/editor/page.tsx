@@ -1,24 +1,21 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { doc, getDoc, addDoc, updateDoc, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { PageHeader, FormActions } from "../../components/AdminShared";
 import ImageUpload from "../../components/ImageUpload";
 
-export default function BlogPostEditor({ params }: { params: Promise<{ id: string }> }) {
-    // Unwrap params 
-    // Note: Next.js 15+ params are promises, sticking to standard async usage pattern if applicable, 
-    // but usually in Client Component we can use `use` hook or async logic.
-    // For safety with this Next version, let's treat it as a promise if standard patterns apply, 
-    // but usually params in page props are objects in previous Next versions. 
-    // Assuming Next 15/16 constraints: params is a promise.
-    const resolvedParams = use(params);
-    const id = resolvedParams.id;
-    const isNew = id === "new";
-
+function BlogPostEditorContent() {
+    const searchParams = useSearchParams();
     const router = useRouter();
+
+    // Get ID from Query Params
+    const paramId = searchParams.get("id");
+    const isNew = !paramId || paramId === "new";
+    const id = paramId || "new";
+
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(!isNew);
 
@@ -33,7 +30,7 @@ export default function BlogPostEditor({ params }: { params: Promise<{ id: strin
     });
 
     useEffect(() => {
-        if (!isNew) {
+        if (!isNew && id) {
             const fetchPost = async () => {
                 const docRef = doc(db, "posts", id);
                 const snap = await getDoc(docRef);
@@ -176,5 +173,13 @@ export default function BlogPostEditor({ params }: { params: Promise<{ id: strin
                 />
             </form>
         </div>
+    );
+}
+
+export default function BlogPostEditor() {
+    return (
+        <Suspense fallback={<div>Loading editor...</div>}>
+            <BlogPostEditorContent />
+        </Suspense>
     );
 }

@@ -49,7 +49,7 @@ export default function BlogPostsList() {
                 title="Journal / Blog"
                 description="Manage news and articles."
                 actionLabel="Create Post"
-                actionHref="/admin/posts/new"
+                actionHref="/admin/posts/editor?id=new"
             />
 
             {loading ? (
@@ -61,7 +61,7 @@ export default function BlogPostsList() {
 
                             <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-white/90 p-1 rounded-lg">
                                 <Link
-                                    href={`/admin/posts/${post.id}`}
+                                    href={`/admin/posts/editor?id=${post.id}`}
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                                 >
                                     <Edit size={16} />
