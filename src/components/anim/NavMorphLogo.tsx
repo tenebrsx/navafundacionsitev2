@@ -46,34 +46,35 @@ export default function NavMorphLogo() {
 
     const variants = {
         n: {
-            collapsed: { x: 145, opacity: 1 },
-            straight: { x: 0, opacity: 1 },
-            rotated: { x: 0, opacity: 1 }
+            collapsed: { x: 245, opacity: 1 },
+            straight: { x: 100, opacity: 1 },
+            rotated: { x: 100, opacity: 1 }
         },
         a1: {
-            collapsed: { x: 145, opacity: 0, scale: 0.9, rotate: 0 },
-            straight: { x: 95, opacity: 1, scale: 1, rotate: 0 },
-            rotated: { x: 90, opacity: 1, scale: 1, rotate: -90 } // < pointing Left
+            collapsed: { x: 245, opacity: 0, scale: 0.9, rotate: 0 },
+            straight: { x: 195, opacity: 1, scale: 1, rotate: 0 },
+            rotated: { x: 195, opacity: 1, scale: 1, rotate: -90 } // < pointing Left
         },
         v: {
-            collapsed: { x: 145, opacity: 0, scale: 0.9 },
-            straight: { x: 195, opacity: 1, scale: 1 },
-            rotated: { x: 195, opacity: 1, scale: 1 }
+            collapsed: { x: 245, opacity: 0, scale: 0.9 },
+            straight: { x: 295, opacity: 1, scale: 1 },
+            rotated: { x: 295, opacity: 1, scale: 1 }
         },
         a2: {
-            collapsed: { x: 145, opacity: 0, scale: 0.9, rotate: 0 },
-            straight: { x: 290, opacity: 1, scale: 1, rotate: 0 },
-            rotated: { x: 300, opacity: 1, scale: 1, rotate: 90 } // > pointing Right
+            collapsed: { x: 245, opacity: 0, scale: 0.9, rotate: 0 },
+            straight: { x: 390, opacity: 1, scale: 1, rotate: 0 },
+            rotated: { x: 390, opacity: 1, scale: 1, rotate: 90 } // > pointing Right
         }
     };
 
     return (
         <div className="relative z-20 w-full flex justify-center h-[20vh] items-center pointer-events-none">
             <motion.svg
-                viewBox="0 0 380 100"
+                viewBox="0 0 600 100"
                 className="h-full w-auto max-w-full"
                 animate={phase}
                 initial="collapsed"
+                style={{ overflow: "visible" }}
             >
                 {/* Letter N */}
                 <motion.path

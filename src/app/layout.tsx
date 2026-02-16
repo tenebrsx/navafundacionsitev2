@@ -26,6 +26,7 @@ export const metadata: Metadata = {
 import SmoothScroll from "@/components/anim/SmoothScroll";
 import CustomCursor from "@/components/anim/CustomCursor";
 import NoiseOverlay from "@/components/anim/NoiseOverlay";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export default function RootLayout({
   children,
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${ibmPlexSerif.variable}`}>
       <body className="antialiased bg-[#F4F4F2] text-[#002FA7] md:cursor-none">
+        <LoadingScreen />
         <SmoothScroll>
           <NoiseOverlay />
           <CustomCursor />

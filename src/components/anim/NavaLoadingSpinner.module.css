@@ -1,0 +1,45 @@
+/* Full-page loading backdrop */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F4F4F2;
+    opacity: 1;
+    transition: opacity 0.6s ease-out;
+}
+
+.fadeOut {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Spinner container — keeps the SVG compact */
+.spinnerWrapper {
+    width: 280px;
+    height: 280px;
+}
+
+.svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Fast spin for loading feel */
+.spin {
+    transform-origin: 0px 0px;
+    animation: loadingSpin 3s linear infinite;
+}
+
+@keyframes loadingSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { FileText, FolderOpen, Users, Calendar, ArrowRight, LayoutDashboard } from "lucide-react";
+import { FileText, FolderOpen, Users, Calendar, ArrowRight, LayoutDashboard, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
@@ -36,6 +36,12 @@ export default function AdminDashboard() {
             description: "Schedule and manage upcoming events.",
             href: "/admin/events",
             icon: Calendar,
+        },
+        {
+            title: "Subscribers",
+            description: "View list of email subscribers.",
+            href: "/admin/subscribers",
+            icon: Mail,
         }
     ];
 

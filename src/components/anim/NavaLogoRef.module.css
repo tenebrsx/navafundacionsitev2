@@ -1,0 +1,30 @@
+.wrapper {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Continuous rotation around the SVG origin (0, 0) */
+.spin {
+    transform-origin: 0px 0px;
+    animation: orbit 6s linear infinite;
+}
+
+@keyframes orbit {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
