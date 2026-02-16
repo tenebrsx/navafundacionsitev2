@@ -8,41 +8,7 @@ import { db } from "@/lib/firebase";
 
 // --- Components ---
 
-const RenderGrid = () => (
-    <div className="absolute inset-0 pointer-events-none z-0 mix-blend-multiply">
-        {/* Pulsing Grid Lines */}
-        <div className="absolute inset-0 flex justify-between px-4 sm:px-12 md:px-24">
-            {[...Array(5)].map((_, i) => (
-                <motion.div
-                    key={`v-${i}`}
-                    initial={{ height: "0%", opacity: 0 }}
-                    animate={{ height: "100%", opacity: [0.1, 0.3, 0.1] }}
-                    transition={{
-                        height: { duration: 1.5, delay: i * 0.1, ease: "circOut" },
-                        opacity: { duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.5 }
-                    }}
-                    className="w-[1px] bg-[#002FA7]/30"
-                />
-            ))}
-        </div>
-        <div className="absolute inset-0 flex flex-col justify-between py-12">
-            {[...Array(5)].map((_, i) => (
-                <motion.div
-                    key={`h-${i}`}
-                    initial={{ width: "0%", opacity: 0 }}
-                    animate={{ width: "100%", opacity: [0.1, 0.3, 0.1] }}
-                    transition={{
-                        width: { duration: 1.5, delay: i * 0.1 + 0.5, ease: "circOut" },
-                        opacity: { duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.5 + 1 }
-                    }}
-                    className="h-[1px] bg-[#002FA7]/30"
-                />
-            ))}
-        </div>
-    </div>
-);
-
-import NavMorphLogo from "@/components/anim/NavMorphLogo";
+import NavaLogoRef from "@/components/anim/NavaLogoRef";
 
 export default function BuildingPage() {
     const [email, setEmail] = useState("");
@@ -72,20 +38,9 @@ export default function BuildingPage() {
     return (
         <div className="relative min-h-screen w-full bg-white text-[#002FA7] font-sans selection:bg-[#002FA7] selection:text-white overflow-hidden flex flex-col justify-between">
 
-            <RenderGrid />
-
             {/* Center Content - Logo + Form */}
             <main className="flex-1 flex flex-col items-center justify-center p-4 gap-8 md:gap-12">
-                <NavMorphLogo />
-
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1, duration: 1 }}
-                    className="font-mono text-xs md:text-sm tracking-[0.3em] text-[#002FA7] uppercase font-bold"
-                >
-                    Narrativa Alternativa
-                </motion.div>
+                <NavaLogoRef />
 
                 {/* Email Form */}
                 <div className="w-full max-w-md flex flex-col items-center gap-4 mt-8">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import MagneticButton from "@/components/anim/MagneticButton";
 import ScrollRevealText from "@/components/anim/ScrollRevealText";
-import NavMorphLogo from "@/components/anim/NavMorphLogo";
+import NavaLogoRef from "@/components/anim/NavaLogoRef";
 import HomePrograms from "@/components/HomePrograms";
 
 import HomeExhibition from "@/components/HomeExhibition";
@@ -18,30 +18,11 @@ export default function Home() {
     return (
         <div className="w-full">
 
-            {/* Hero Section: The Building Animation (Parallax/Sticky) */}
+            {/* Hero Section */}
             <section className="sticky top-0 z-0 w-full h-screen flex flex-col justify-center items-center overflow-hidden border-b border-[#002FA7]">
 
                 <div className="relative z-10 flex flex-col items-center gap-8 md:gap-12 w-full">
-                    <div className="w-[80vw] md:w-[50vw]">
-                        <NavMorphLogo />
-                    </div>
-
-                    <div className="flex flex-col items-center gap-4">
-                        <motion.span
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1, duration: 1 }}
-                            className="font-mono text-xs md:text-sm tracking-[0.3em] text-[#002FA7] uppercase font-bold"
-                        >
-                            Narrativa Alternativa
-                        </motion.span>
-                        <MagneticButton>
-                            <Link href="/story" className="flex items-center gap-2 group mt-4">
-                                <span className="uppercase tracking-widest text-xs font-bold text-[#002FA7] group-hover:underline decoration-1 underline-offset-4">Enter Archive</span>
-                                <ArrowRight size={14} className="text-[#002FA7]" />
-                            </Link>
-                        </MagneticButton>
-                    </div>
+                    <NavaLogoRef />
                 </div>
 
                 <div className="absolute bottom-8 left-0 w-full flex justify-between px-4 sm:px-12 md:px-24">
