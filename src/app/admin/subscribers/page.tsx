@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Copy, Mail, Download } from "lucide-react";
+import { ArrowLeft, Copy, Mail, Download, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 interface Subscriber {
@@ -59,6 +59,16 @@ export default function SubscribersPage() {
         navigator.clipboard.writeText(allEmails);
         setCopySuccess("all");
         setTimeout(() => setCopySuccess(null), 2000);
+    };
+
+    const handleDelete = async (sub: Subscriber) => {
+        if (!confirm(`Delete subscriber ${sub.email}?`)) return;
+        try {
+            await deleteDoc(doc(db, "subscribers", sub.id));
+            setSubscribers(prev => prev.filter(s => s.id !== sub.id));
+        } catch (err) {
+            console.error("Error deleting subscriber:", err);
+        }
     };
 
     if (authLoading || loading) {
@@ -135,17 +145,26 @@ export default function SubscribersPage() {
                                             }
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <button
-                                                onClick={() => copyToClipboard(sub.email)}
-                                                className="p-2 text-[#002FA7]/40 hover:text-[#002FA7] hover:bg-[#002FA7]/10 rounded-full transition-all"
-                                                title="Copy Email"
-                                            >
-                                                {copySuccess === sub.email ? (
-                                                    <span className="text-xs font-bold px-2">Copied!</span>
-                                                ) : (
-                                                    <Copy size={16} />
-                                                )}
-                                            </button>
+                                            <div className="flex items-center justify-end gap-1">
+                                                <button
+                                                    onClick={() => copyToClipboard(sub.email)}
+                                                    className="p-2 text-[#002FA7]/40 hover:text-[#002FA7] hover:bg-[#002FA7]/10 rounded-full transition-all"
+                                                    title="Copy Email"
+                                                >
+                                                    {copySuccess === sub.email ? (
+                                                        <span className="text-xs font-bold px-2">Copied!</span>
+                                                    ) : (
+                                                        <Copy size={16} />
+                                                    )}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(sub)}
+                                                    className="p-2 text-red-300 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
+                                                    title="Delete Subscriber"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))

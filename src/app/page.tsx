@@ -39,11 +39,11 @@ export default function BuildingPage() {
         <div className="relative min-h-screen w-full bg-white text-[#002FA7] font-sans selection:bg-[#002FA7] selection:text-white overflow-hidden flex flex-col justify-between">
 
             {/* Center Content - Logo + Form */}
-            <main className="flex-1 flex flex-col items-center justify-center p-4 gap-8 md:gap-12">
+            <main className="flex-1 flex flex-col items-center justify-center p-4 gap-4 md:gap-6">
                 <NavaLogoRef />
 
                 {/* Email Form */}
-                <div className="w-full max-w-md flex flex-col items-center gap-4 mt-8">
+                <div className="w-full max-w-md flex flex-col items-center gap-4">
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -68,7 +68,7 @@ export default function BuildingPage() {
                             onSubmit={handleNotify}
                             className="flex w-full flex-col gap-2 relative"
                         >
-                            <div className="flex w-full border-b-2 border-[#002FA7] relative">
+                            <div className="flex w-full border-b-2 border-[#002FA7] relative" suppressHydrationWarning>
                                 <input
                                     type="email"
                                     placeholder="Enter your email"
@@ -77,6 +77,7 @@ export default function BuildingPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                     disabled={loading}
+                                    suppressHydrationWarning
                                 />
                                 <button
                                     type="submit"
