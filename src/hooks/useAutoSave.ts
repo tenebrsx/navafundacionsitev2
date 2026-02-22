@@ -56,6 +56,34 @@ export function useAutoSave(
         }, 2000); // 2 second delay
     }, [collectionName, docId, isNew]);
 
+    const triggerSave = useCallback(async () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        const currentString = JSON.stringify(formData);
+        if (currentString === lastSavedData.current) return;
+
+        setSaveStatus('saving');
+        try {
+            const dataToSave = { ...formData, status: 'draft', updatedAt: new Date().toISOString() };
+            if (docId) {
+                await updateDoc(doc(db, collectionName, docId), dataToSave);
+                setSaveStatus('saved');
+                lastSavedData.current = currentString;
+            } else if (isNew && formData.title && formData.title.length > 2) {
+                const ref = await addDoc(collection(db, collectionName), {
+                    ...dataToSave,
+                    createdAt: new Date().toISOString()
+                });
+                setDocId(ref.id);
+                setSaveStatus('saved');
+                lastSavedData.current = currentString;
+                window.history.replaceState(null, '', `/admin/${collectionName}/${ref.id}`);
+            }
+        } catch (error) {
+            console.error("Manual save error:", error);
+            setSaveStatus('error');
+        }
+    }, [collectionName, docId, isNew, formData]);
+
     useEffect(() => {
         // Skip initial render or empty states
         if (isNew && !formData.title) return;
@@ -67,5 +95,5 @@ export function useAutoSave(
         };
     }, [formData, debouncedSave, isNew]);
 
-    return { saveStatus, docId };
+    return { saveStatus, docId, triggerSave };
 }

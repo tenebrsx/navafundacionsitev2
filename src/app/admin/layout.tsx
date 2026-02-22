@@ -5,7 +5,7 @@ import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutDashboard, FileText, FolderOpen, Users, LogOut, Settings, Calendar, ChevronRight, Menu, PanelLeftClose, PanelLeftOpen, Mail } from "lucide-react";
+import { LayoutDashboard, FileText, FolderOpen, Users, LogOut, Settings, Calendar, ChevronRight, Menu, PanelLeftClose, PanelLeftOpen, Mail, Palette } from "lucide-react";
 import { ToastProvider } from "./context/ToastContext";
 
 // Define here for easy addition in the future
@@ -105,6 +105,7 @@ function Sidebar({ isOpen }: { isOpen: boolean }) {
         { label: "Projects", icon: FolderOpen, href: "/admin/projects" },
         { label: "Team", icon: Users, href: "/admin/team" },
         { label: "Events", icon: Calendar, href: "/admin/events" },
+        { label: "Catalog", icon: Palette, href: "/admin/catalog" },
         { label: "Subscribers", icon: Mail, href: "/admin/subscribers" },
     ];
 

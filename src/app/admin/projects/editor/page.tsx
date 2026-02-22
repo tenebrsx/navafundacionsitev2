@@ -6,7 +6,11 @@ import { doc, getDoc, addDoc, updateDoc, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { PageHeader, FormActions } from "../../components/AdminShared";
 import ImageUpload from "../../components/ImageUpload";
-import { Plus, X } from "lucide-react";
+import EditorLayout from "../../components/EditorLayout";
+import FormSection from "../../components/FormSection";
+import FormField, { inputStyles, inputStylesLg, textareaStyles, selectStyles } from "../../components/FormField";
+import ToggleSwitch from "../../components/ToggleSwitch";
+import { X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
@@ -14,7 +18,6 @@ import { useAutoSave } from "@/hooks/useAutoSave";
 function ProjectEditor() {
     const searchParams = useSearchParams();
     const router = useRouter();
-    // Retrieve ID from URL, but also track dynamic ID creation
     const paramId = searchParams.get("id");
     const isNew = !paramId || paramId === "new";
 
@@ -36,7 +39,7 @@ function ProjectEditor() {
     });
 
     // Auto-Save Hook
-    const { saveStatus, docId } = useAutoSave("projects", isNew ? "new" : paramId, formData, isNew);
+    const { saveStatus, docId, triggerSave } = useAutoSave("projects", isNew ? "new" : paramId, formData, isNew);
 
     useEffect(() => {
         if (!isNew && paramId) {
@@ -48,7 +51,6 @@ function ProjectEditor() {
                     setFormData(prev => ({
                         ...prev,
                         ...data,
-                        // Ensure we don't accidentally overwrite strict fields if missing
                         status: data.status || "draft",
                         featured: data.featured || false
                     } as any));
@@ -69,30 +71,27 @@ function ProjectEditor() {
             const now = new Date().toISOString();
             const payload = { ...formData, status: 'published', updatedAt: now };
 
-            // Use the auto-created ID if available, otherwise original param
             const activeId = docId || paramId;
 
             if (activeId && activeId !== 'new') {
                 await updateDoc(doc(db, "projects", activeId), payload);
-                showToast("Project uploaded", "success");
+                showToast("Project published", "success");
             } else {
-                // Should behave as fallback create
                 const ref = await addDoc(collection(db, "projects"), {
                     ...payload,
                     createdAt: now
                 });
-                showToast("Project created & uploaded", "success");
+                showToast("Project created & published", "success");
             }
             router.push("/admin/projects");
         } catch (error) {
             console.error("Save failed:", error);
-            showToast("Failed to upload project", "error");
+            showToast("Failed to publish project", "error");
         } finally {
             setLoading(false);
         }
     };
 
-    // ... existing helpers ...
     const addGalleryImage = (url: string) => {
         if (url) setFormData(prev => ({ ...prev, gallery: [...prev.gallery, url] }));
     };
@@ -113,131 +112,130 @@ function ProjectEditor() {
                 description={
                     <span className="flex items-center gap-2">
                         {isNew ? "Add a new portfolio item." : `Editing: ${formData.title}`}
-                        {saveStatus === 'saving' && <span className="text-xs text-[#002FA7] animate-pulse">(Saving draft...)</span>}
-                        {saveStatus === 'saved' && <span className="text-xs text-green-600">(Draft Saved)</span>}
                     </span>
                 }
                 backHref="/admin/projects"
                 sticky={true}
             />
-            {/* ... rest of form ... */}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 px-8 md:px-12 pb-24">
-                <div className="lg:col-span-2 space-y-8">
-                    <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Project Title</label>
+            <EditorLayout
+                sidebar={
+                    <>
+                        {/* Cover Image */}
+                        <FormSection title="Cover Image" variant="sidebar" icon={<ImageIcon size={14} />}>
+                            <ImageUpload
+                                value={formData.mainImage}
+                                onChange={url => setFormData({ ...formData, mainImage: url })}
+                                folder="projects"
+                            />
+                        </FormSection>
+
+                        {/* Settings */}
+                        <FormSection title="Settings" variant="sidebar">
+                            <ToggleSwitch
+                                id="featured"
+                                label="Feature on Homepage"
+                                description="Display this project prominently on the front page"
+                                checked={formData.featured}
+                                onChange={(checked) => setFormData({ ...formData, featured: checked })}
+                            />
+                        </FormSection>
+                    </>
+                }
+            >
+                {/* Project Details */}
+                <FormSection title="Project Details">
+                    <FormField label="Project Title" required>
+                        <input
+                            type="text"
+                            required
+                            value={formData.title}
+                            onChange={e => setFormData({ ...formData, title: e.target.value })}
+                            className={inputStylesLg}
+                            placeholder="e.g. Art Basel Installation"
+                        />
+                    </FormField>
+
+                    <div className="grid grid-cols-3 gap-5">
+                        <FormField label="Year">
                             <input
                                 type="text"
-                                required
-                                value={formData.title}
-                                onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-bold text-lg"
-                                placeholder="e.g. Art Basel Installation"
+                                value={formData.year}
+                                onChange={e => setFormData({ ...formData, year: e.target.value })}
+                                className={inputStyles}
                             />
-                        </div>
-
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="col-span-1 space-y-2">
-                                <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Year</label>
-                                <input
-                                    type="text"
-                                    value={formData.year}
-                                    onChange={e => setFormData({ ...formData, year: e.target.value })}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium"
-                                />
-                            </div>
-                            <div className="col-span-1 space-y-2">
-                                <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Category</label>
-                                <select
-                                    value={formData.category}
-                                    onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium"
-                                >
-                                    <option>Art Fair</option>
-                                    <option>Exhibition</option>
-                                    <option>Installation</option>
-                                    <option>Digital</option>
-                                </select>
-                            </div>
-                            <div className="col-span-2 space-y-2">
-                                <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Client / Commission</label>
-                                <input
-                                    type="text"
-                                    value={formData.client}
-                                    onChange={e => setFormData({ ...formData, client: e.target.value })}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Description</label>
-                            <textarea
-                                rows={6}
-                                value={formData.description}
-                                onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium resize-none"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                        <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Gallery Images</label>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                            {formData.gallery.map((url, i) => (
-                                <div key={i} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group border border-gray-200">
-                                    <img src={url} className="w-full h-full object-cover" />
-                                    <button
-                                        type="button"
-                                        onClick={() => removeGalleryImage(i)}
-                                        className="absolute top-1 right-1 bg-red-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition hover:bg-red-700"
-                                    >
-                                        <X size={12} />
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="mt-4 p-4 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50">
-                            <p className="text-xs text-gray-400 mb-2 text-center uppercase font-bold tracking-wider">Add to Gallery</p>
-                            <ImageUpload
-                                value=""
-                                onChange={addGalleryImage}
-                                folder="projects/gallery"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="space-y-8">
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                        <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">Visibility</label>
-                        <div className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-lg transition-colors hover:border-[#002FA7]/30">
+                        </FormField>
+                        <FormField label="Category">
+                            <select
+                                value={formData.category}
+                                onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                className={selectStyles}
+                            >
+                                <option>Art Fair</option>
+                                <option>Exhibition</option>
+                                <option>Installation</option>
+                                <option>Digital</option>
+                            </select>
+                        </FormField>
+                        <FormField label="Client / Commission">
                             <input
-                                type="checkbox"
-                                id="featured"
-                                checked={!!(formData as any).featured}
-                                onChange={(e) => setFormData({ ...formData, featured: e.target.checked } as any)}
-                                className="w-5 h-5 text-[#002FA7] rounded focus:ring-[#002FA7] cursor-pointer accent-[#002FA7]"
+                                type="text"
+                                value={formData.client}
+                                onChange={e => setFormData({ ...formData, client: e.target.value })}
+                                className={inputStyles}
+                                placeholder="e.g. Museo de Arte Moderno"
                             />
-                            <label htmlFor="featured" className="text-sm font-bold text-gray-700 select-none cursor-pointer flex-1">
-                                Feature on Homepage
-                            </label>
-                        </div>
+                        </FormField>
                     </div>
 
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                        <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">Main Cover Image</label>
+                    <FormField
+                        label="Description"
+                        charCount={{ current: formData.description.length, max: 2000 }}
+                    >
+                        <textarea
+                            rows={6}
+                            value={formData.description}
+                            onChange={e => setFormData({ ...formData, description: e.target.value })}
+                            className={textareaStyles}
+                            placeholder="Describe the project, your approach, and the results..."
+                        />
+                    </FormField>
+                </FormSection>
+
+                {/* Gallery */}
+                <FormSection title="Gallery Images" description="Additional project photos and documentation">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                        {formData.gallery.map((url, i) => (
+                            <div key={i} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden group border border-gray-200">
+                                <img src={url} className="w-full h-full object-cover" alt={`Gallery ${i + 1}`} />
+                                <button
+                                    type="button"
+                                    onClick={() => removeGalleryImage(i)}
+                                    className="absolute top-1.5 right-1.5 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition hover:bg-red-700"
+                                >
+                                    <X size={11} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="p-4 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50/50">
+                        <p className="text-[10px] text-gray-400 mb-2 text-center uppercase font-bold tracking-wider">Add to Gallery</p>
                         <ImageUpload
-                            value={formData.mainImage}
-                            onChange={url => setFormData({ ...formData, mainImage: url })}
-                            folder="projects"
+                            value=""
+                            onChange={addGalleryImage}
+                            folder="projects/gallery"
                         />
                     </div>
-                </div>
-            </div>
+                </FormSection>
+            </EditorLayout>
 
-            <FormActions loading={loading} onCancel={() => router.push("/admin/projects")} />
+            <FormActions
+                loading={loading}
+                onCancel={() => router.push("/admin/projects")}
+                onSaveDraft={triggerSave}
+                saveStatus={saveStatus}
+                isPublished={formData.status === "published"}
+            />
         </form>
     );
 }

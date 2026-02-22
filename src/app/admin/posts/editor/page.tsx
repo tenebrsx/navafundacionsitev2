@@ -6,15 +6,19 @@ import { doc, getDoc, addDoc, updateDoc, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { PageHeader, FormActions } from "../../components/AdminShared";
 import ImageUpload from "../../components/ImageUpload";
+import EditorLayout from "../../components/EditorLayout";
+import FormSection from "../../components/FormSection";
+import FormField, { inputStyles, inputStylesLg, textareaStyles, selectStyles } from "../../components/FormField";
+import ToggleSwitch from "../../components/ToggleSwitch";
+import { FileText, Image as ImageIcon } from "lucide-react";
+
+import { useAutoSave } from "@/hooks/useAutoSave";
 
 function BlogPostEditorContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
-
-    // Get ID from Query Params
     const paramId = searchParams.get("id");
     const isNew = !paramId || paramId === "new";
-    const id = paramId || "new";
 
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(!isNew);
@@ -25,38 +29,44 @@ function BlogPostEditorContent() {
         category: "News",
         excerpt: "",
         image: "",
-        content: "", // We'll assume simple markdown text for now
-        featured: false
+        content: "",
+        featured: false,
+        status: "draft"
     });
 
+    // Auto-Save Hook
+    const { saveStatus, docId, triggerSave } = useAutoSave("posts", isNew ? "new" : paramId, formData, isNew);
+
     useEffect(() => {
-        if (!isNew && id) {
+        if (!isNew && paramId) {
             const fetchPost = async () => {
-                const docRef = doc(db, "posts", id);
+                const docRef = doc(db, "posts", paramId);
                 const snap = await getDoc(docRef);
                 if (snap.exists()) {
-                    setFormData({ featured: false, ...snap.data() } as any);
+                    setFormData({ featured: false, status: "draft", ...snap.data() } as any);
                 }
                 setFetching(false);
             };
             fetchPost();
         }
-    }, [id, isNew]);
+    }, [paramId, isNew]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            if (isNew) {
-                await addDoc(collection(db, "posts"), {
-                    ...formData,
-                    createdAt: new Date().toISOString()
-                });
+            const now = new Date().toISOString();
+            const payload = { ...formData, status: "published", updatedAt: now };
+
+            const activeId = docId || paramId;
+
+            if (activeId && activeId !== "new") {
+                await updateDoc(doc(db, "posts", activeId), payload);
             } else {
-                await updateDoc(doc(db, "posts", id), {
-                    ...formData,
-                    updatedAt: new Date().toISOString()
+                await addDoc(collection(db, "posts"), {
+                    ...payload,
+                    createdAt: now
                 });
             }
             router.push("/admin/posts");
@@ -71,114 +81,121 @@ function BlogPostEditorContent() {
     if (fetching) return <div className="p-12 text-center text-gray-400">Loading editor...</div>;
 
     return (
-        <div>
+        <form onSubmit={handleSubmit} className="relative">
             <PageHeader
                 title={isNew ? "Create Post" : "Edit Post"}
-                description={isNew ? "Write a new journal entry." : `Editing: ${formData.title}`}
+                description={
+                    <span className="flex items-center gap-2">
+                        {isNew ? "Write a new journal entry." : `Editing: ${formData.title}`}
+                    </span>
+                }
+                backHref="/admin/posts"
+                sticky={true}
             />
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm max-w-3xl">
-                <div className="space-y-6">
-                    {/* Title */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Title</label>
+            <EditorLayout
+                sidebar={
+                    <>
+                        {/* Cover Image */}
+                        <FormSection title="Cover Image" variant="sidebar" icon={<ImageIcon size={14} />}>
+                            <ImageUpload
+                                value={formData.image}
+                                onChange={url => setFormData({ ...formData, image: url })}
+                                folder="posts"
+                            />
+                        </FormSection>
+
+                        {/* Metadata */}
+                        <FormSection title="Post Settings" variant="sidebar">
+                            <FormField label="Date">
+                                <input
+                                    type="date"
+                                    required
+                                    value={formData.date}
+                                    onChange={e => setFormData({ ...formData, date: e.target.value })}
+                                    className={inputStyles}
+                                />
+                            </FormField>
+                            <FormField label="Category">
+                                <select
+                                    value={formData.category}
+                                    onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                    className={selectStyles}
+                                >
+                                    <option>News</option>
+                                    <option>Exhibition</option>
+                                    <option>Press</option>
+                                    <option>Essay</option>
+                                </select>
+                            </FormField>
+                            <ToggleSwitch
+                                id="featured"
+                                label="Feature on Homepage"
+                                description="Pin this post to the Journal section on homepage"
+                                checked={formData.featured}
+                                onChange={(checked) => setFormData({ ...formData, featured: checked })}
+                            />
+                        </FormSection>
+                    </>
+                }
+            >
+                {/* Post Content */}
+                <FormSection title="Post Content" icon={<FileText size={14} />}>
+                    <FormField label="Title" required>
                         <input
                             type="text"
                             required
                             value={formData.title}
                             onChange={e => setFormData({ ...formData, title: e.target.value })}
-                            className="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg focus:border-[#002FA7] outline-none transition"
+                            className={inputStylesLg}
+                            placeholder="Enter post title"
                         />
-                    </div>
+                    </FormField>
 
-                    <div className="grid grid-cols-2 gap-6">
-                        {/* Date */}
-                        <div>
-                            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Date</label>
-                            <input
-                                type="date"
-                                required
-                                value={formData.date}
-                                onChange={e => setFormData({ ...formData, date: e.target.value })}
-                                className="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg focus:border-[#002FA7] outline-none transition"
-                            />
-                        </div>
-
-                        {/* Category */}
-                        <div>
-                            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Category</label>
-                            <select
-                                value={formData.category}
-                                onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                className="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg focus:border-[#002FA7] outline-none transition"
-                            >
-                                <option>News</option>
-                                <option>Exhibition</option>
-                                <option>Press</option>
-                                <option>Essay</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {/* Image */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Cover Image</label>
-                        <ImageUpload
-                            value={formData.image}
-                            onChange={url => setFormData({ ...formData, image: url })}
-                            folder="posts"
-                        />
-                    </div>
-
-                    {/* Excerpt */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Excerpt (Short Summary)</label>
+                    <FormField
+                        label="Excerpt"
+                        hint="A brief summary shown in article previews and search results"
+                        charCount={{ current: formData.excerpt.length, max: 300 }}
+                    >
                         <textarea
                             rows={3}
                             value={formData.excerpt}
                             onChange={e => setFormData({ ...formData, excerpt: e.target.value })}
-                            className="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg focus:border-[#002FA7] outline-none transition"
+                            className={textareaStyles}
+                            placeholder="Write a compelling one-line summary..."
                         />
-                    </div>
+                    </FormField>
 
-                    <div className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-lg transition-colors hover:border-[#002FA7]/30">
-                        <input
-                            type="checkbox"
-                            id="featured"
-                            checked={!!(formData as any).featured}
-                            onChange={(e) => setFormData({ ...formData, featured: e.target.checked } as any)}
-                            className="w-5 h-5 text-[#002FA7] rounded focus:ring-[#002FA7] cursor-pointer accent-[#002FA7]"
-                        />
-                        <label htmlFor="featured" className="text-sm font-bold text-gray-700 select-none cursor-pointer flex-1">
-                            Feature on Homepage (Journal)
-                        </label>
-                    </div>
-
-                    {/* Content */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Content (Markdown)</label>
+                    <FormField
+                        label="Content"
+                        hint="Write in Markdown for rich formatting"
+                        charCount={{ current: formData.content.length, max: 10000 }}
+                    >
                         <textarea
-                            rows={15}
+                            rows={18}
                             value={formData.content}
                             onChange={e => setFormData({ ...formData, content: e.target.value })}
-                            className="w-full bg-gray-50 border border-gray-200 p-3 rounded-lg focus:border-[#002FA7] outline-none transition font-mono text-sm"
-                            placeholder="# Header&#10;&#10;Write your post here..."
+                            className={`${textareaStyles} font-mono text-[13px]`}
+                            placeholder={"# Heading\n\nWrite your post here..."}
                         />
-                    </div>
-                </div>
+                    </FormField>
+                </FormSection>
+            </EditorLayout>
 
-                <FormActions
-                    loading={loading}
-                    onCancel={() => router.push("/admin/posts")}
-                />
-            </form>
-        </div>
+            <FormActions
+                loading={loading}
+                onCancel={() => router.push("/admin/posts")}
+                onSaveDraft={triggerSave}
+                saveStatus={saveStatus}
+                isPublished={formData.status === "published"}
+            />
+        </form>
     );
 }
 
 export default function BlogPostEditor() {
     return (
-        <Suspense fallback={<div>Loading editor...</div>}>
+        <Suspense fallback={<div className="p-12 text-center text-gray-400">Loading editor...</div>}>
             <BlogPostEditorContent />
         </Suspense>
     );

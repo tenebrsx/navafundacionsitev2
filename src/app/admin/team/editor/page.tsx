@@ -7,7 +7,11 @@ import { db } from "@/lib/firebase";
 import { PageHeader, FormActions } from "../../components/AdminShared";
 import { useToast } from "../../context/ToastContext";
 import ImageUpload from "../../components/ImageUpload";
-import { Loader2 } from "lucide-react";
+import EditorLayout from "../../components/EditorLayout";
+import FormSection from "../../components/FormSection";
+import FormField, { inputStyles, inputStylesLg, textareaStyles } from "../../components/FormField";
+import ToggleSwitch from "../../components/ToggleSwitch";
+import { User, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
 
@@ -26,13 +30,16 @@ function TeamEditorContent() {
         role: "",
         bio: "",
         image: "",
-        status: "draft",
+        email: "",
+        instagram: "",
         linkedin: "",
-        order: 0
+        order: 0,
+        status: "draft",
+        featured: false
     });
 
-    // Auto-Save Hook handles drafts
-    const { saveStatus, docId } = useAutoSave("team", isNew ? "new" : paramId, formData, isNew);
+    // Auto-Save Hook
+    const { saveStatus, docId, triggerSave } = useAutoSave("team", isNew ? "new" : paramId, formData, isNew);
 
     useEffect(() => {
         if (!isNew && paramId) {
@@ -40,13 +47,13 @@ function TeamEditorContent() {
                 try {
                     const docSnap = await getDoc(doc(db, "team", paramId));
                     if (docSnap.exists()) {
-                        setFormData({ ...docSnap.data() } as any);
+                        setFormData(prev => ({ ...prev, ...docSnap.data(), featured: docSnap.data().featured || false } as any));
                     } else {
-                        showToast("Member not found", "error");
+                        showToast("Team member not found", "error");
                         router.push("/admin/team");
                     }
                 } catch (error) {
-                    showToast("Error loading member", "error");
+                    showToast("Error loading team member", "error");
                 } finally {
                     setLoading(false);
                 }
@@ -60,14 +67,8 @@ function TeamEditorContent() {
         setSaving(true);
         try {
             const now = new Date();
-            const payload = {
-                ...formData,
-                status: "published",
-                updatedAt: now,
-                order: Number(formData.order)
-            };
+            const payload = { ...formData, status: "published", updatedAt: now };
 
-            // Use the auto-created ID if available, otherwise original param
             const activeId = docId || paramId;
 
             if (activeId && activeId !== 'new') {
@@ -75,7 +76,7 @@ function TeamEditorContent() {
                 showToast("Team member published", "success");
             } else {
                 await addDoc(collection(db, "team"), { ...payload, createdAt: now });
-                showToast("Team member created & published", "success");
+                showToast("Team member added", "success");
             }
             router.push("/admin/team");
         } catch (error) {
@@ -86,110 +87,137 @@ function TeamEditorContent() {
         }
     };
 
-    if (loading) return <div className="p-12 text-center text-gray-400 font-mono text-sm animate-pulse">Loading member data...</div>;
+    if (loading) return <div className="p-12 text-center text-gray-400 animate-pulse">Loading team member...</div>;
 
     return (
         <form onSubmit={handleSubmit} className="relative">
             <PageHeader
-                title={isNew ? "New Team Member" : "Edit Profile"}
+                title={isNew ? "Add Team Member" : "Edit Team Member"}
                 description={
                     <span className="flex items-center gap-2">
-                        {isNew ? "Add a new person to your team." : `Editing: ${formData.name}`}
-                        {saveStatus === 'saving' && <span className="text-xs text-[#002FA7] animate-pulse">(Saving draft...)</span>}
-                        {saveStatus === 'saved' && <span className="text-xs text-green-600">(Draft Saved)</span>}
+                        {isNew ? "Add a new person to the team." : `Editing: ${formData.name}`}
                     </span>
                 }
                 backHref="/admin/team"
                 sticky={true}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 px-8 md:px-12 pb-24">
-                {/* Main Content */}
-                <div className="lg:col-span-2 space-y-8">
-                    <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Full Name</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="e.g. Jane Doe"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Role / Title</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.role}
-                                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                    placeholder="e.g. Creative Director"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-gray-500 tracking-wider">Bio (Markdown)</label>
-                            <textarea
-                                rows={6}
-                                value={formData.bio}
-                                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                                placeholder="Write a short biography..."
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-medium resize-none"
+            <EditorLayout
+                sidebar={
+                    <>
+                        {/* Photo */}
+                        <FormSection title="Photo" variant="sidebar" icon={<ImageIcon size={14} />}>
+                            <ImageUpload
+                                value={formData.image}
+                                onChange={(url) => setFormData({ ...formData, image: url })}
+                                folder="team"
                             />
-                        </div>
-                    </div>
-                </div>
+                        </FormSection>
 
-                {/* Sidebar */}
-                <div className="space-y-8">
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                        <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">Profile Photo</label>
-                        <ImageUpload
-                            value={formData.image}
-                            onChange={(url) => setFormData({ ...formData, image: url })}
-                            folder="team"
+                        {/* Social Links */}
+                        <FormSection title="Social Links" variant="sidebar" icon={<LinkIcon size={14} />}>
+                            <FormField label="Email" hint="Contact email (not displayed publicly)">
+                                <input
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    className={inputStyles}
+                                    placeholder="name@nava.org"
+                                />
+                            </FormField>
+                            <FormField label="Instagram">
+                                <input
+                                    type="text"
+                                    value={formData.instagram}
+                                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+                                    className={inputStyles}
+                                    placeholder="@username"
+                                />
+                            </FormField>
+                            <FormField label="LinkedIn">
+                                <input
+                                    type="url"
+                                    value={formData.linkedin}
+                                    onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                                    className={inputStyles}
+                                    placeholder="https://linkedin.com/in/..."
+                                />
+                            </FormField>
+                        </FormSection>
+
+                        {/* Settings */}
+                        <FormSection title="Settings" variant="sidebar">
+                            <FormField label="Display Order" hint="Lower numbers appear first on the team page">
+                                <input
+                                    type="number"
+                                    value={formData.order}
+                                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                                    className={inputStyles}
+                                />
+                            </FormField>
+                            <ToggleSwitch
+                                id="featured"
+                                label="Feature on Homepage"
+                                description="Show this team member on the front page"
+                                checked={formData.featured}
+                                onChange={(checked) => setFormData({ ...formData, featured: checked })}
+                            />
+                        </FormSection>
+                    </>
+                }
+            >
+                {/* Member Details */}
+                <FormSection title="Member Details" icon={<User size={14} />}>
+                    <FormField label="Full Name" required>
+                        <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className={inputStylesLg}
+                            placeholder="e.g. María López"
                         />
-                    </div>
+                    </FormField>
 
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">LinkedIn URL</label>
-                            <input
-                                type="url"
-                                value={formData.linkedin}
-                                onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                                placeholder="https://linkedin.com/in/..."
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all text-sm"
-                            />
-                        </div>
+                    <FormField label="Role / Title">
+                        <input
+                            type="text"
+                            value={formData.role}
+                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                            className={inputStyles}
+                            placeholder="e.g. Curator, Head of Programming"
+                        />
+                    </FormField>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold uppercase text-gray-500 tracking-wider block">Sort Order</label>
-                            <input
-                                type="number"
-                                value={formData.order}
-                                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-slate-400 focus:bg-white transition-all font-mono text-sm"
-                            />
-                            <p className="text-[10px] text-gray-400">Lower numbers appear first.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <FormField
+                        label="Bio"
+                        charCount={{ current: formData.bio.length, max: 800 }}
+                    >
+                        <textarea
+                            rows={6}
+                            value={formData.bio}
+                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                            className={textareaStyles}
+                            placeholder="Brief biography, background, and expertise..."
+                        />
+                    </FormField>
+                </FormSection>
+            </EditorLayout>
 
-            <FormActions loading={saving} onCancel={() => router.push("/admin/team")} />
+            <FormActions
+                loading={saving}
+                onCancel={() => router.push("/admin/team")}
+                onSaveDraft={triggerSave}
+                saveStatus={saveStatus}
+                isPublished={formData.status === "published"}
+            />
         </form>
     );
 }
 
 export default function TeamEditor() {
     return (
-        <Suspense fallback={<div className="p-12 text-center animate-pulse">Loading Editor...</div>}>
+        <Suspense fallback={<div className="p-12 text-center text-gray-400 animate-pulse">Loading editor...</div>}>
             <TeamEditorContent />
         </Suspense>
     );

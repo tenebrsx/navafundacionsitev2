@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { FileText, FolderOpen, Users, Calendar, ArrowRight, LayoutDashboard, Mail } from "lucide-react";
+import { FileText, FolderOpen, Users, Calendar, ArrowRight, LayoutDashboard, Mail, Palette } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
@@ -38,6 +38,12 @@ export default function AdminDashboard() {
             icon: Calendar,
         },
         {
+            title: "Catalog",
+            description: "Manage artworks, generate QR codes for the fair.",
+            href: "/admin/catalog",
+            icon: Palette,
+        },
+        {
             title: "Subscribers",
             description: "View list of email subscribers.",
             href: "/admin/subscribers",
@@ -62,45 +68,47 @@ export default function AdminDashboard() {
 
     return (
         <div className="w-full max-w-5xl">
-            {/* Header */}
-            <div className="mb-12">
-                <div className="flex items-center gap-3 text-[#002FA7]/60 mb-2 font-mono text-xs uppercase tracking-widest">
-                    <LayoutDashboard size={14} />
-                    <span>Dashboard</span>
+            {/* Compact Header */}
+            <div className="mb-8 flex items-end justify-between">
+                <div>
+                    <div className="flex items-center gap-2 text-[#002FA7]/40 mb-1 font-mono text-[10px] uppercase tracking-widest">
+                        <LayoutDashboard size={12} />
+                        <span>Dashboard</span>
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-black text-[#002FA7] tracking-tight">
+                        {greeting}, <span className="opacity-50">{user?.email?.split('@')[0]}</span>
+                    </h1>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-[#002FA7] tracking-tight mb-4">
-                    {greeting}, <span className="opacity-60">{user?.email?.split('@')[0]}</span>
-                </h1>
-                <p className="text-[#002FA7]/60 max-w-xl text-lg">
-                    Welcome to the Nava Content Management System. Select a module below to start editing content.
+                <p className="text-[#002FA7]/40 text-xs font-medium hidden md:block">
+                    Select a module to start editing.
                 </p>
             </div>
 
-            {/* Grid */}
+            {/* 3-column Grid — fills evenly as 2 rows × 3 cards */}
             <motion.div
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
             >
                 {modules.map((module) => (
                     <Link href={module.href} key={module.href}>
                         <motion.div
                             variants={item}
-                            className="bg-[#F4F4F2] p-8 rounded-xl border border-[#002FA7]/10 hover:border-[#002FA7] shadow-sm hover:shadow-xl hover:shadow-[#002FA7]/5 transition-all duration-300 group h-full flex flex-col relative overflow-hidden"
+                            className="bg-white/80 p-6 rounded-xl border border-gray-200/80 hover:border-[#002FA7] shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-[#002FA7]/5 transition-all duration-300 group h-full flex flex-col relative overflow-hidden"
                         >
-                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                                <ArrowRight size={20} className="text-[#002FA7]" />
+                            <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                                <ArrowRight size={18} className="text-[#002FA7]" />
                             </div>
 
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-lg bg-[#002FA7]/5 group-hover:bg-[#002FA7] flex items-center justify-center text-[#002FA7] group-hover:text-white transition-colors duration-300">
-                                    <module.icon size={24} />
+                            <div className="flex items-center gap-4 mb-3">
+                                <div className="w-10 h-10 rounded-lg bg-[#002FA7]/5 group-hover:bg-[#002FA7] flex items-center justify-center text-[#002FA7] group-hover:text-white transition-colors duration-300 shrink-0">
+                                    <module.icon size={20} />
                                 </div>
+                                <h3 className="text-lg font-bold text-gray-900">{module.title}</h3>
                             </div>
 
-                            <h3 className="text-xl font-bold text-[#002FA7] mb-2">{module.title}</h3>
-                            <p className="text-[#002FA7]/60 text-sm leading-relaxed mb-4 flex-1">
+                            <p className="text-gray-400 text-sm leading-relaxed flex-1">
                                 {module.description}
                             </p>
                         </motion.div>
