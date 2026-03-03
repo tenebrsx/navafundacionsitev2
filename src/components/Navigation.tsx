@@ -53,7 +53,7 @@ export default function Navigation({ onClose }: { onClose: () => void }) {
                 </div>
                 <div>
                     <h4 className="opacity-50 mb-2">Contact</h4>
-                    <p>info@nava.org</p>
+                    <p>info@nava-fundacion.org</p>
                 </div>
                 <div className="hidden md:block text-right opacity-50">
                     NARRATIVA ALTERNATIVA © 2026

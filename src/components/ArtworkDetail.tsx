@@ -24,17 +24,22 @@ interface Artwork {
     status: string;
 }
 
-export default function ArtworkDetail({ id }: { id: string }) {
+export default function ArtworkDetail({ id: propId }: { id: string }) {
     const [artwork, setArtwork] = useState<Artwork | null>(null);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     useEffect(() => {
+        // Read the real ID from the URL path (Firebase rewrite may serve a fallback page
+        // where the server-rendered prop doesn't match the actual requested ID).
+        const segments = window.location.pathname.split("/").filter(Boolean);
+        const realId = segments.length >= 2 && segments[0] === "catalog" ? segments[1] : propId;
+
         const fetchArtwork = async () => {
-            if (!id) return;
+            if (!realId) return;
             setLoading(true);
             try {
-                const docRef = doc(db, "catalog", id);
+                const docRef = doc(db, "catalog", realId);
                 const snap = await getDoc(docRef);
                 if (snap.exists()) {
                     setArtwork({ id: snap.id, ...snap.data() } as Artwork);
@@ -46,7 +51,7 @@ export default function ArtworkDetail({ id }: { id: string }) {
             }
         };
         fetchArtwork();
-    }, [id]);
+    }, [propId]);
 
     const handleShare = async () => {
         const url = window.location.href;
@@ -109,55 +114,13 @@ export default function ArtworkDetail({ id }: { id: string }) {
                 </div>
             </motion.div>
 
-            {/* Meta Grid */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="border-b border-[#002FA7] pb-12 mb-12"
-            >
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 border-t border-[#002FA7]/20 pt-6 mb-10">
-                    <div>
-                        <span className="font-mono text-[10px] uppercase opacity-50 block mb-1">Artist</span>
-                        <span className="text-sm font-medium">{artwork.artist}</span>
-                    </div>
-                    <div>
-                        <span className="font-mono text-[10px] uppercase opacity-50 block mb-1">Year</span>
-                        <span className="text-sm font-medium">{artwork.year || "—"}</span>
-                    </div>
-                    <div>
-                        <span className="font-mono text-[10px] uppercase opacity-50 block mb-1">Medium</span>
-                        <span className="text-sm font-medium">{artwork.medium || "—"}</span>
-                    </div>
-                    <div>
-                        <span className="font-mono text-[10px] uppercase opacity-50 block mb-1">Dimensions</span>
-                        <span className="text-sm font-medium">{artwork.dimensions || "—"}</span>
-                    </div>
-                    <div>
-                        <span className="font-mono text-[10px] uppercase opacity-50 block mb-1">Price</span>
-                        <span className="text-sm font-medium">
-                            {artwork.priceOnRequest ? "Price on Request" : artwork.price || "—"}
-                        </span>
-                    </div>
-                </div>
-
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
-                    className="text-5xl md:text-8xl leading-[0.85] tracking-tighter max-w-6xl"
-                >
-                    {artwork.title}
-                </motion.h1>
-            </motion.div>
-
             {/* Main Image */}
             {artwork.mainImage && (
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className="w-full aspect-[4/3] md:aspect-[16/9] bg-zinc-100 mb-16 relative overflow-hidden cursor-pointer"
+                    transition={{ duration: 0.8, delay: 0.1 }}
+                    className="w-full aspect-[4/3] md:aspect-[16/9] bg-zinc-100 mb-12 relative overflow-hidden cursor-pointer"
                     onClick={() => setSelectedImage(artwork.mainImage)}
                 >
                     <Image
@@ -170,6 +133,66 @@ export default function ArtworkDetail({ id }: { id: string }) {
                     />
                 </motion.div>
             )}
+
+            {/* Identity & Meta Grid (Screenshot Style) */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="mb-16"
+            >
+                {/* 1. Artist & Origin Line */}
+                <div className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-widest">
+                    <span className="text-[#002FA7] font-semibold">{artwork.artist}</span>
+                    <span className="text-black/20">•</span>
+                    <span className="text-black/40 lowercase normal-case tracking-normal">b. Dominican Republic</span>
+                </div>
+
+                {/* 2. Title */}
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.3 }}
+                    className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-[#002FA7] max-w-4xl mb-10"
+                >
+                    {artwork.title}
+                </motion.h1>
+
+                {/* Top Divider */}
+                <div className="w-full h-px bg-[#002FA7]/20 mb-8"></div>
+
+                {/* 3. Meta Data Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-8 mb-8">
+
+                    {/* Row 1 */}
+                    <div>
+                        <span className="font-mono text-[10px] uppercase text-black/40 tracking-widest block mb-2">Year</span>
+                        <span className="text-lg font-medium text-[#111]">{artwork.year || "—"}</span>
+                    </div>
+                    <div>
+                        <span className="font-mono text-[10px] uppercase text-black/40 tracking-widest block mb-2">Dimensions</span>
+                        <span className="text-lg font-medium text-[#111]">{artwork.dimensions || "—"}</span>
+                    </div>
+
+                    {/* Row 2 */}
+                    <div className="md:col-span-2">
+                        <span className="font-mono text-[10px] uppercase text-black/40 tracking-widest block mb-2">Medium</span>
+                        <span className="text-lg font-medium text-[#111]">{artwork.medium || "—"}</span>
+                    </div>
+
+                    {/* Row 3 (Edition / Price) */}
+                    <div className="md:col-span-2">
+                        <span className="font-mono text-[10px] uppercase text-black/40 tracking-widest block mb-2">Price</span>
+                        <span className="text-lg font-medium text-[#111]">
+                            {artwork.priceOnRequest ? "Price on Request" : artwork.price || "—"}
+                        </span>
+                    </div>
+
+                </div>
+
+                {/* Bottom Divider */}
+                <div className="w-full h-px bg-[#002FA7]/20"></div>
+            </motion.div>
 
             {/* Description */}
             {artwork.description && (

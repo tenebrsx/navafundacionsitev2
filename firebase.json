@@ -11,6 +11,20 @@
             "**/.*",
             "**/node_modules/**"
         ],
-        "cleanUrls": true
+        "cleanUrls": true,
+        "rewrites": [
+            {
+                "source": "/catalog/**",
+                "destination": "/catalog/1.html"
+            },
+            {
+                "source": "/projects/**",
+                "destination": "/projects/1.html"
+            },
+            {
+                "source": "/blog/**",
+                "destination": "/blog/1.html"
+            }
+        ]
     }
 }

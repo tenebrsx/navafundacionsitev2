@@ -14,15 +14,7 @@ export default function VisitPage() {
                     </h1>
 
                     <div className="flex flex-col gap-12 text-lg">
-                        <div>
-                            <h3 className="text-sm opacity-50 uppercase tracking-widest mb-2">Location</h3>
-                            <p className="font-medium">
-                                C. Arzobispo Meriño 2<br />
-                                Zona Colonial<br />
-                                Santo Domingo, Dominican Republic
-                            </p>
-                            <Link href="https://maps.google.com" target="_blank" className="text-sm underline mt-2 inline-block">View on Map ↗</Link>
-                        </div>
+                        {/* Location address removed as requested */}
 
                         <div>
                             <h3 className="text-sm opacity-50 uppercase tracking-widest mb-2">Hours</h3>
@@ -42,7 +34,7 @@ export default function VisitPage() {
 
                         <div>
                             <h3 className="text-sm opacity-50 uppercase tracking-widest mb-2">Contact</h3>
-                            <a href="mailto:info@nava.org" className="block text-2xl font-bold hover:opacity-50 transition-opacity">info@nava.org</a>
+                            <a href="mailto:info@nava-fundacion.org" className="block text-2xl font-bold hover:opacity-50 transition-opacity">info@nava-fundacion.org</a>
                             <p className="mt-2 text-sm">+1 (809) 555-0123</p>
                         </div>
                     </div>

@@ -28,15 +28,11 @@ export default function Footer() {
                     <h3 className="text-2xl md:text-3xl font-medium uppercase tracking-tight">Contacts</h3>
                     <div className="w-full h-px bg-[#002FA7]/20"></div>
                     <div className="flex flex-col gap-1 text-lg">
-                        <p>Santo Domingo, DR</p>
-                        <p>C. Arzobispo Meriño 2</p>
-                        <a href="mailto:info@nava.org" className="hover:underline mt-4 block">info@nava.org</a>
+                        <a href="mailto:info@nava-fundacion.org" className="hover:underline mt-4 block">info@nava-fundacion.org</a>
                     </div>
 
                     <div className="flex gap-4 mt-8 text-sm uppercase font-medium">
-                        <Link href="#" className="hover:underline">Instagram</Link>
-                        <Link href="#" className="hover:underline">Twitter</Link>
-                        <Link href="#" className="hover:underline">Are.na</Link>
+                        <Link href="https://www.instagram.com/nava_fundacion/" target="_blank" rel="noopener noreferrer" className="hover:underline">Instagram</Link>
                     </div>
 
                     <div className="mt-8 opacity-50 text-xs">
