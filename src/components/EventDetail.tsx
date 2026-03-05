@@ -55,7 +55,7 @@ export default function EventDetail({ event, upcomingEvents = [], backLink = "/e
                     </div>
 
                     {/* Description Body */}
-                    <div className="font-mono text-[#002FA7] text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                    <div className="font-sans text-[#002FA7] text-base md:text-lg leading-relaxed whitespace-pre-wrap">
                         {t(event.description, event.description_es)}
                     </div>
                 </div>
