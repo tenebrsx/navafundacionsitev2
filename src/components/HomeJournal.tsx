@@ -68,13 +68,13 @@ export default function HomeJournal() {
                 </MagneticButton>
             </div>
 
-            <div className="w-full md:w-2/3 h-[300px] md:h-[400px] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10 overflow-hidden">
+            <div className="w-full md:w-2/3 aspect-[4/3] md:aspect-[3/2] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10 overflow-hidden">
                 {post.image || post.imageUrl ? (
                     <Image
                         src={post.image || post.imageUrl}
                         alt={post.title}
                         fill
-                        className="object-contain p-4 md:p-8 hover:scale-105 transition-transform duration-700"
+                        className="object-cover hover:scale-105 transition-transform duration-700"
                     />
                 ) : (
                     <span className="font-mono text-xs opacity-30 text-[#002FA7]">Editorial Image Placeholder</span>
