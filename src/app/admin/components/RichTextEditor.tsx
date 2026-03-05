@@ -168,23 +168,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
                     <Redo size={16} />
                 </ToolbarBtn>
             </div>
-
-            {/* Shortcuts hint strip */}
-            <div className="px-3 pb-1.5 flex flex-wrap gap-3 text-[10px] text-[#002FA7]/40 font-mono">
-                {[
-                    { key: `${mod}+B`, label: 'Bold' },
-                    { key: `${mod}+I`, label: 'Italic' },
-                    { key: `${mod}+K`, label: 'Link' },
-                    { key: `${mod}+Z`, label: 'Undo' },
-                    { key: `Enter`, label: 'New paragraph' },
-                    { key: `Shift+Enter`, label: 'Line break' },
-                ].map(({ key, label }) => (
-                    <span key={key} className="flex items-center gap-1">
-                        <kbd className="bg-[#002FA7]/8 border border-[#002FA7]/15 px-1.5 py-0.5 rounded text-[9px]">{key}</kbd>
-                        {label}
-                    </span>
-                ))}
-            </div>
         </div>
     );
 };
