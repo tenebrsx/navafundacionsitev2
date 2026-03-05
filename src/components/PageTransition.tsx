@@ -1,41 +1,50 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import NavaLoadingSpinner from "@/components/anim/NavaLoadingSpinner";
 
 /**
  * PageTransition — shows the branded spinner briefly on route changes.
- * Listens to pathname changes via Next.js usePathname().
+ * Much faster than the initial load (0.5s total).
  */
 export default function PageTransition() {
     const pathname = usePathname();
-    const [isTransitioning, setIsTransitioning] = useState(false);
+    const [visible, setVisible] = useState(false);
     const [fadeOut, setFadeOut] = useState(false);
-    const [prevPath, setPrevPath] = useState(pathname);
+    const isFirstRender = useRef(true);
+    const prevPath = useRef(pathname);
 
     useEffect(() => {
-        // Skip on initial mount (LoadingScreen handles that)
-        if (pathname === prevPath) return;
+        // Skip the very first render (LoadingScreen handles the initial load)
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
 
-        setPrevPath(pathname);
-        setIsTransitioning(true);
+        // Only trigger on actual path changes
+        if (pathname === prevPath.current) return;
+        prevPath.current = pathname;
+
+        // Show spinner
+        setVisible(true);
         setFadeOut(false);
 
-        // Brief pause then fade out
-        const fadeTimer = setTimeout(() => setFadeOut(true), 400);
+        // Start fading out after 200ms
+        const fadeTimer = setTimeout(() => setFadeOut(true), 200);
+        // Remove completely after 500ms
         const removeTimer = setTimeout(() => {
-            setIsTransitioning(false);
+            setVisible(false);
             setFadeOut(false);
-        }, 800);
+        }, 500);
 
         return () => {
             clearTimeout(fadeTimer);
             clearTimeout(removeTimer);
         };
-    }, [pathname, prevPath]);
+    }, [pathname]);
 
-    if (!isTransitioning) return null;
+    if (!visible) return null;
 
     return <NavaLoadingSpinner fadeOut={fadeOut} />;
 }

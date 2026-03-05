@@ -12,6 +12,7 @@ interface Post {
     date: string;
     category: string;
     content?: string;
+    image?: string;
     imageUrl?: string;
     author?: string;
 }

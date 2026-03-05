@@ -11,6 +11,7 @@ interface Post {
     date: string;
     category: string;
     content?: string;
+    image?: string;
     imageUrl?: string;
     author?: string;
 }
@@ -59,10 +60,10 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
             </div>
 
             {/* Hero Image — full width at the top */}
-            {post.imageUrl && (
+            {(post.image || post.imageUrl) && (
                 <div className="w-full aspect-[16/9] md:aspect-[21/9] mb-12 border border-[#002FA7]/10 overflow-hidden relative">
                     <Image
-                        src={post.imageUrl}
+                        src={(post.image || post.imageUrl)!}
                         alt={post.title}
                         fill
                         className="object-cover"
@@ -74,10 +75,10 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
 
             {/* Article Content */}
             <div className="max-w-3xl">
-                <div className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none">
+                <div className="font-sans">
                     {post.content ? (
                         post.content.split('\n').map((paragraph, idx) => (
-                            <p key={idx} className="mb-6">{paragraph}</p>
+                            <p key={idx} className="text-[#002FA7] text-base md:text-lg leading-relaxed mb-6">{paragraph}</p>
                         ))
                     ) : (
                         <p className="opacity-50 italic">[No content available]</p>
