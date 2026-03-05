@@ -10,7 +10,8 @@ import EditorLayout from "../../components/EditorLayout";
 import FormSection from "../../components/FormSection";
 import FormField, { inputStyles, inputStylesLg, textareaStyles, selectStyles } from "../../components/FormField";
 import ToggleSwitch from "../../components/ToggleSwitch";
-import { FileText, Image as ImageIcon } from "lucide-react";
+import { FileText, Image as ImageIcon, Search, User } from "lucide-react";
+import RichTextEditor from "../../components/RichTextEditor";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
 
@@ -27,9 +28,12 @@ function BlogPostEditorContent() {
         title: "",
         date: new Date().toISOString().split("T")[0],
         category: "News",
+        author: "",
         excerpt: "",
         image: "",
         content: "",
+        seoTitle: "",
+        seoDescription: "",
         featured: false,
         status: "draft"
     });
@@ -128,6 +132,15 @@ function BlogPostEditorContent() {
                                     <option>Essay</option>
                                 </select>
                             </FormField>
+                            <FormField label="Author">
+                                <input
+                                    type="text"
+                                    value={formData.author}
+                                    onChange={e => setFormData({ ...formData, author: e.target.value })}
+                                    className={inputStyles}
+                                    placeholder="e.g. Nava Team"
+                                />
+                            </FormField>
                             <ToggleSwitch
                                 id="featured"
                                 label="Feature on Homepage"
@@ -139,6 +152,36 @@ function BlogPostEditorContent() {
                     </>
                 }
             >
+                {/* SEO Settings (New Section Above Content) */}
+                <FormSection title="SEO Settings" icon={<Search size={14} />}>
+                    <FormField
+                        label="SEO Title"
+                        hint="Optimized title for search engines (defaults to Post Title if empty)"
+                        charCount={{ current: formData.seoTitle?.length || 0, max: 60 }}
+                    >
+                        <input
+                            type="text"
+                            value={formData.seoTitle || ""}
+                            onChange={e => setFormData({ ...formData, seoTitle: e.target.value })}
+                            className={inputStyles}
+                            placeholder="SEO Optimized Title"
+                        />
+                    </FormField>
+                    <FormField
+                        label="SEO Description"
+                        hint="Meta description for search results"
+                        charCount={{ current: formData.seoDescription?.length || 0, max: 160 }}
+                    >
+                        <textarea
+                            rows={2}
+                            value={formData.seoDescription || ""}
+                            onChange={e => setFormData({ ...formData, seoDescription: e.target.value })}
+                            className={textareaStyles}
+                            placeholder="Write a concise meta description..."
+                        />
+                    </FormField>
+                </FormSection>
+
                 {/* Post Content */}
                 <FormSection title="Post Content" icon={<FileText size={14} />}>
                     <FormField label="Title" required>
@@ -154,7 +197,7 @@ function BlogPostEditorContent() {
 
                     <FormField
                         label="Excerpt"
-                        hint="A brief summary shown in article previews and search results"
+                        hint="A brief summary shown in article previews on the site"
                         charCount={{ current: formData.excerpt.length, max: 300 }}
                     >
                         <textarea
@@ -168,15 +211,11 @@ function BlogPostEditorContent() {
 
                     <FormField
                         label="Content"
-                        hint="Write in Markdown for rich formatting"
-                        charCount={{ current: formData.content.length, max: 10000 }}
+                        hint="Rich text content"
                     >
-                        <textarea
-                            rows={18}
+                        <RichTextEditor
                             value={formData.content}
-                            onChange={e => setFormData({ ...formData, content: e.target.value })}
-                            className={`${textareaStyles} font-mono text-[13px]`}
-                            placeholder={"# Heading\n\nWrite your post here..."}
+                            onChange={(html) => setFormData({ ...formData, content: html })}
                         />
                     </FormField>
                 </FormSection>

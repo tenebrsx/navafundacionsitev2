@@ -75,15 +75,10 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
 
             {/* Article Content */}
             <div className="max-w-3xl">
-                <div className="font-sans">
-                    {post.content ? (
-                        post.content.split('\n').map((paragraph, idx) => (
-                            <p key={idx} className="text-[#002FA7] text-base md:text-lg leading-relaxed mb-6">{paragraph}</p>
-                        ))
-                    ) : (
-                        <p className="opacity-50 italic">[No content available]</p>
-                    )}
-                </div>
+                <div
+                    className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none font-sans"
+                    dangerouslySetInnerHTML={{ __html: post.content || '<p class="opacity-50 italic">[No content available]</p>' }}
+                />
             </div>
 
             {/* Read Next */}
