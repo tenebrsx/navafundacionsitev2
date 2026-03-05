@@ -31,9 +31,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
         }
     };
 
-    const ToggleBtn = ({ onClick, isActive, disabled = false, children }: any) => (
+    const ToggleBtn = ({ onClick, isActive, disabled = false, title, children }: any) => (
         <button
             type="button"
+            title={title}
             disabled={disabled}
             onClick={onClick}
             className={`p-1.5 rounded-md transition-colors ${isActive ? 'bg-[#002FA7] text-white' : 'text-[#002FA7] hover:bg-[#002FA7]/10'} ${disabled ? 'opacity-30 cursor-not-allowed' : ''}`}
@@ -45,42 +46,48 @@ const MenuBar = ({ editor }: { editor: any }) => {
     return (
         <div className="flex flex-wrap items-center gap-1 border-b border-[#002FA7]/20 bg-[#F4F4F2] p-2 sticky top-0 z-10">
             <ToggleBtn
+                title="Bold (Cmd+B)"
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 isActive={editor.isActive('bold')}
             >
                 <Bold size={16} />
             </ToggleBtn>
             <ToggleBtn
+                title="Italic (Cmd+I)"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 isActive={editor.isActive('italic')}
             >
                 <Italic size={16} />
             </ToggleBtn>
-            <ToggleBtn onClick={addLink} isActive={editor.isActive('link')}>
+            <ToggleBtn title="Add Link" onClick={addLink} isActive={editor.isActive('link')}>
                 <LinkIcon size={16} />
             </ToggleBtn>
 
             <div className="w-px h-5 bg-[#002FA7]/20 mx-1"></div>
 
             <ToggleBtn
+                title="Heading 2 (Cmd+Option+2)"
                 onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                 isActive={editor.isActive('heading', { level: 2 })}
             >
                 <Heading2 size={16} />
             </ToggleBtn>
             <ToggleBtn
+                title="Bullet List (Cmd+Shift+8)"
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
                 isActive={editor.isActive('bulletList')}
             >
                 <List size={16} />
             </ToggleBtn>
             <ToggleBtn
+                title="Numbered List (Cmd+Shift+7)"
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
                 isActive={editor.isActive('orderedList')}
             >
                 <ListOrdered size={16} />
             </ToggleBtn>
             <ToggleBtn
+                title="Quote (Cmd+Shift+B)"
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
                 isActive={editor.isActive('blockquote')}
             >
@@ -89,19 +96,21 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
             <div className="w-px h-5 bg-[#002FA7]/20 mx-1"></div>
 
-            <ToggleBtn onClick={addImage}>
+            <ToggleBtn title="Insert Image" onClick={addImage}>
                 <ImageIcon size={16} />
             </ToggleBtn>
 
             <div className="w-px h-5 bg-[#002FA7]/20 mx-1"></div>
 
             <ToggleBtn
+                title="Undo (Cmd+Z)"
                 onClick={() => editor.chain().focus().undo().run()}
                 disabled={!editor.can().undo()}
             >
                 <Undo size={16} />
             </ToggleBtn>
             <ToggleBtn
+                title="Redo (Cmd+Shift+Z)"
                 onClick={() => editor.chain().focus().redo().run()}
                 disabled={!editor.can().redo()}
             >
