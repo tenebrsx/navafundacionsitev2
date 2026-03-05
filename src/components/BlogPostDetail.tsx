@@ -76,9 +76,9 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
                     </div>
                 )}
 
-                {/* Article Content — centered prose */}
+                {/* Article Content — editorial prose */}
                 <div
-                    className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-[1.8] prose-headings:text-[#002FA7] max-w-none font-sans text-[#002FA7]"
+                    className="editorial-prose"
                     dangerouslySetInnerHTML={{ __html: post.content || '<p class="opacity-50 italic">[No content available]</p>' }}
                 />
 

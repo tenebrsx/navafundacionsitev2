@@ -56,7 +56,7 @@ export default function EventDetail({ event, upcomingEvents = [], backLink = "/e
 
                     {/* Description Body */}
                     <div
-                        className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none font-sans"
+                        className="editorial-prose"
                         dangerouslySetInnerHTML={{ __html: t(event.description, event.description_es) || '' }}
                     />
                 </div>
