@@ -4,118 +4,187 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
-import { Bold, Italic, Link as LinkIcon, Heading2, List, ListOrdered, Quote, Image as ImageIcon, Undo, Redo } from 'lucide-react';
-import { useState } from 'react';
+import {
+    Bold, Italic, Link as LinkIcon, Heading2,
+    List, ListOrdered, Quote, Image as ImageIcon, Undo, Redo
+} from 'lucide-react';
 
 interface RichTextEditorProps {
     value: string;
     onChange: (value: string) => void;
 }
 
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent);
+const mod = isMac ? '⌘' : 'Ctrl';
+
+interface ToolbarBtnProps {
+    onClick: () => void;
+    isActive?: boolean;
+    disabled?: boolean;
+    label: string;
+    shortcut?: string;
+    children: React.ReactNode;
+}
+
+const ToolbarBtn = ({ onClick, isActive = false, disabled = false, label, shortcut, children }: ToolbarBtnProps) => (
+    <div className="relative group/btn">
+        <button
+            type="button"
+            disabled={disabled}
+            onClick={onClick}
+            className={`
+                p-1.5 rounded-md transition-colors
+                ${isActive ? 'bg-[#002FA7] text-white' : 'text-[#002FA7] hover:bg-[#002FA7]/10'}
+                ${disabled ? 'opacity-30 cursor-not-allowed' : ''}
+            `}
+        >
+            {children}
+        </button>
+
+        {/* Tooltip */}
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 pointer-events-none opacity-0 group-hover/btn:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap">
+            <div className="bg-[#0a0a0a] text-white text-[11px] px-2.5 py-1.5 rounded-md flex items-center gap-2 shadow-lg">
+                <span className="font-medium">{label}</span>
+                {shortcut && (
+                    <kbd className="font-mono bg-white/15 text-white/80 px-1.5 py-0.5 rounded text-[10px] leading-none">
+                        {shortcut}
+                    </kbd>
+                )}
+            </div>
+            {/* Arrow */}
+            <div className="w-2 h-2 bg-[#0a0a0a] rotate-45 mx-auto -mt-1 rounded-sm"></div>
+        </div>
+    </div>
+);
+
+const Divider = () => <div className="w-px h-5 bg-[#002FA7]/20 mx-1" />;
+
 const MenuBar = ({ editor }: { editor: any }) => {
     if (!editor) return null;
 
     const addLink = () => {
         const url = window.prompt('Enter URL:');
-        if (url) {
-            editor.chain().focus().setLink({ href: url }).run();
-        } else if (url === '') {
-            editor.chain().focus().unsetLink().run();
-        }
+        if (url) editor.chain().focus().setLink({ href: url }).run();
+        else if (url === '') editor.chain().focus().unsetLink().run();
     };
 
     const addImage = () => {
-        const url = window.prompt('Enter Image URL (or upload via Firebase first and paste link):');
-        if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-        }
+        const url = window.prompt('Enter image URL (upload via Firebase first, then paste link):');
+        if (url) editor.chain().focus().setImage({ src: url }).run();
     };
 
-    const ToggleBtn = ({ onClick, isActive, disabled = false, title, children }: any) => (
-        <button
-            type="button"
-            title={title}
-            disabled={disabled}
-            onClick={onClick}
-            className={`p-1.5 rounded-md transition-colors ${isActive ? 'bg-[#002FA7] text-white' : 'text-[#002FA7] hover:bg-[#002FA7]/10'} ${disabled ? 'opacity-30 cursor-not-allowed' : ''}`}
-        >
-            {children}
-        </button>
-    );
-
     return (
-        <div className="flex flex-wrap items-center gap-1 border-b border-[#002FA7]/20 bg-[#F4F4F2] p-2 sticky top-0 z-10">
-            <ToggleBtn
-                title="Bold (Cmd+B)"
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                isActive={editor.isActive('bold')}
-            >
-                <Bold size={16} />
-            </ToggleBtn>
-            <ToggleBtn
-                title="Italic (Cmd+I)"
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-                isActive={editor.isActive('italic')}
-            >
-                <Italic size={16} />
-            </ToggleBtn>
-            <ToggleBtn title="Add Link" onClick={addLink} isActive={editor.isActive('link')}>
-                <LinkIcon size={16} />
-            </ToggleBtn>
+        <div className="border-b border-[#002FA7]/20 bg-[#F4F4F2] sticky top-0 z-10">
+            {/* Toolbar Row */}
+            <div className="flex flex-wrap items-center gap-1 p-2">
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    isActive={editor.isActive('bold')}
+                    label="Bold"
+                    shortcut={`${mod}+B`}
+                >
+                    <Bold size={16} />
+                </ToolbarBtn>
 
-            <div className="w-px h-5 bg-[#002FA7]/20 mx-1"></div>
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                    isActive={editor.isActive('italic')}
+                    label="Italic"
+                    shortcut={`${mod}+I`}
+                >
+                    <Italic size={16} />
+                </ToolbarBtn>
 
-            <ToggleBtn
-                title="Heading 2 (Cmd+Option+2)"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                isActive={editor.isActive('heading', { level: 2 })}
-            >
-                <Heading2 size={16} />
-            </ToggleBtn>
-            <ToggleBtn
-                title="Bullet List (Cmd+Shift+8)"
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                isActive={editor.isActive('bulletList')}
-            >
-                <List size={16} />
-            </ToggleBtn>
-            <ToggleBtn
-                title="Numbered List (Cmd+Shift+7)"
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                isActive={editor.isActive('orderedList')}
-            >
-                <ListOrdered size={16} />
-            </ToggleBtn>
-            <ToggleBtn
-                title="Quote (Cmd+Shift+B)"
-                onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                isActive={editor.isActive('blockquote')}
-            >
-                <Quote size={16} />
-            </ToggleBtn>
+                <ToolbarBtn
+                    onClick={addLink}
+                    isActive={editor.isActive('link')}
+                    label="Add Link"
+                    shortcut={`${mod}+K`}
+                >
+                    <LinkIcon size={16} />
+                </ToolbarBtn>
 
-            <div className="w-px h-5 bg-[#002FA7]/20 mx-1"></div>
+                <Divider />
 
-            <ToggleBtn title="Insert Image" onClick={addImage}>
-                <ImageIcon size={16} />
-            </ToggleBtn>
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                    isActive={editor.isActive('heading', { level: 2 })}
+                    label="Heading"
+                    shortcut={`${mod}+Alt+2`}
+                >
+                    <Heading2 size={16} />
+                </ToolbarBtn>
 
-            <div className="w-px h-5 bg-[#002FA7]/20 mx-1"></div>
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().toggleBulletList().run()}
+                    isActive={editor.isActive('bulletList')}
+                    label="Bullet List"
+                    shortcut={`${mod}+Shift+8`}
+                >
+                    <List size={16} />
+                </ToolbarBtn>
 
-            <ToggleBtn
-                title="Undo (Cmd+Z)"
-                onClick={() => editor.chain().focus().undo().run()}
-                disabled={!editor.can().undo()}
-            >
-                <Undo size={16} />
-            </ToggleBtn>
-            <ToggleBtn
-                title="Redo (Cmd+Shift+Z)"
-                onClick={() => editor.chain().focus().redo().run()}
-                disabled={!editor.can().redo()}
-            >
-                <Redo size={16} />
-            </ToggleBtn>
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                    isActive={editor.isActive('orderedList')}
+                    label="Numbered List"
+                    shortcut={`${mod}+Shift+7`}
+                >
+                    <ListOrdered size={16} />
+                </ToolbarBtn>
+
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                    isActive={editor.isActive('blockquote')}
+                    label="Blockquote"
+                    shortcut={`${mod}+Shift+B`}
+                >
+                    <Quote size={16} />
+                </ToolbarBtn>
+
+                <Divider />
+
+                <ToolbarBtn onClick={addImage} label="Insert Image">
+                    <ImageIcon size={16} />
+                </ToolbarBtn>
+
+                <Divider />
+
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().undo().run()}
+                    disabled={!editor.can().undo()}
+                    label="Undo"
+                    shortcut={`${mod}+Z`}
+                >
+                    <Undo size={16} />
+                </ToolbarBtn>
+
+                <ToolbarBtn
+                    onClick={() => editor.chain().focus().redo().run()}
+                    disabled={!editor.can().redo()}
+                    label="Redo"
+                    shortcut={`${mod}+Shift+Z`}
+                >
+                    <Redo size={16} />
+                </ToolbarBtn>
+            </div>
+
+            {/* Shortcuts hint strip */}
+            <div className="px-3 pb-1.5 flex flex-wrap gap-3 text-[10px] text-[#002FA7]/40 font-mono">
+                {[
+                    { key: `${mod}+B`, label: 'Bold' },
+                    { key: `${mod}+I`, label: 'Italic' },
+                    { key: `${mod}+K`, label: 'Link' },
+                    { key: `${mod}+Z`, label: 'Undo' },
+                    { key: `Enter`, label: 'New paragraph' },
+                    { key: `Shift+Enter`, label: 'Line break' },
+                ].map(({ key, label }) => (
+                    <span key={key} className="flex items-center gap-1">
+                        <kbd className="bg-[#002FA7]/8 border border-[#002FA7]/15 px-1.5 py-0.5 rounded text-[9px]">{key}</kbd>
+                        {label}
+                    </span>
+                ))}
+            </div>
         </div>
     );
 };
