@@ -1,5 +1,5 @@
 import Link from "next/link";
-import NavaLogo from "@/components/anim/NavaLogo";
+import NavaLogoRef from "@/components/anim/NavaLogoRef";
 
 export default function Footer() {
     return (
@@ -20,9 +20,9 @@ export default function Footer() {
                 </div>
 
                 {/* Copyright */}
-                <div className="flex items-center gap-3 mt-4 opacity-50 text-xs">
-                    <div className="relative w-8 h-8">
-                        <NavaLogo color="#002FA7" />
+                <div className="flex items-center gap-4 mt-4 opacity-50 text-xs">
+                    <div className="relative w-12 h-12">
+                        <NavaLogoRef />
                     </div>
                     <p>© 2026 Nava Fundacion</p>
                 </div>
