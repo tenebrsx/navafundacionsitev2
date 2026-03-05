@@ -206,6 +206,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
             }),
         ],
         content: value,
+        immediatelyRender: false,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
         },
