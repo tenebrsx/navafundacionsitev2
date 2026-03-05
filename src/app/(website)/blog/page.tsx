@@ -16,6 +16,7 @@ interface Post {
     category: string;
     content?: string;
     imageUrl?: string;
+    image?: string;
 }
 
 function BlogPageContent() {
@@ -72,9 +73,9 @@ function BlogPageContent() {
                     <StaggeredGrid staggerDelay={0.05} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
                         {displayPosts.map((post, i) => (
                             <Link href={`/blog/${post.id}`} key={post.id || i} className="group flex flex-col gap-4 cursor-pointer">
-                                {post.imageUrl ? (
+                                {post.image || post.imageUrl ? (
                                     <div className="w-full aspect-[4/3] overflow-hidden bg-zinc-100 relative">
-                                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <img src={post.image || post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     </div>
                                 ) : (
                                     <div className="w-full aspect-[4/3] bg-[#002FA7]/5 flex items-center justify-center font-mono text-xs opacity-50 border border-[#002FA7]/20 relative overflow-hidden group-hover:bg-[#002FA7]/10 transition-colors">
