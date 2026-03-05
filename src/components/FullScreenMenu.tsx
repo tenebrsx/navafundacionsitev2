@@ -61,6 +61,7 @@ export default function FullScreenMenu({ onClose }: FullScreenMenuProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
+            data-lenis-prevent
             className="fixed inset-0 z-[100] bg-[#002FA7] text-white overflow-y-auto"
         >
             {/* Sticky close bar — always visible while scrolling */}
