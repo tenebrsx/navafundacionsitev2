@@ -12,7 +12,7 @@ export default function WebsiteLayout({
     return (
         <LanguageProvider>
             <Header />
-            <main className="flex-grow pt-24 md:pt-32 pb-12 px-4 md:px-6 min-h-screen flex flex-col">
+            <main className="flex-grow pt-20 md:pt-28 pb-12 px-4 md:px-6 min-h-screen flex flex-col">
                 {children}
                 <Footer />
             </main>
