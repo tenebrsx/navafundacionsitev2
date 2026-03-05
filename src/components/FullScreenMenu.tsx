@@ -61,7 +61,7 @@ export default function FullScreenMenu({ onClose }: FullScreenMenuProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-[100] bg-[#002FA7] text-white flex flex-col p-6 md:p-12"
+            className="fixed inset-0 z-[100] bg-[#002FA7] text-white flex flex-col p-6 md:p-12 overflow-y-auto"
         >
             {/* Header of the Menu */}
             <div className="flex justify-between items-center w-full">
