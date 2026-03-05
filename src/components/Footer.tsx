@@ -20,9 +20,11 @@ export default function Footer() {
                 </div>
 
                 {/* Copyright */}
-                <div className="flex items-center gap-4 mt-4 opacity-50 text-xs">
-                    <div className="relative w-8 h-8">
-                        <NavaLogoRef />
+                <div className="flex items-center gap-3 mt-4 opacity-50 text-xs">
+                    <div className="w-8 h-8 overflow-hidden relative">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.06] origin-center">
+                            <NavaLogoRef />
+                        </div>
                     </div>
                     <p>© 2026 Nava Fundacion</p>
                 </div>
