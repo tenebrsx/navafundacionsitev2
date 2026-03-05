@@ -120,14 +120,14 @@ export default function ArtworkDetail({ id: propId }: { id: string }) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.1 }}
-                    className="w-full aspect-[4/3] md:aspect-[16/9] bg-zinc-100 mb-12 relative overflow-hidden cursor-pointer"
+                    className="w-full h-[60vh] md:h-[80vh] bg-zinc-100/50 mb-12 relative overflow-hidden cursor-pointer flex items-center justify-center border border-[#002FA7]/10"
                     onClick={() => setSelectedImage(artwork.mainImage)}
                 >
                     <Image
                         src={artwork.mainImage}
                         alt={artwork.title}
                         fill
-                        className="object-cover hover:scale-[1.02] transition-transform duration-700"
+                        className="object-contain p-4 md:p-12 hover:scale-[1.02] transition-transform duration-700"
                         sizes="100vw"
                         priority
                     />
@@ -232,14 +232,14 @@ export default function ArtworkDetail({ id: propId }: { id: string }) {
                         {artwork.gallery.map((img, i) => (
                             <div
                                 key={i}
-                                className="aspect-[4/3] bg-zinc-100 relative overflow-hidden cursor-pointer group"
+                                className="h-[40vh] md:h-[50vh] bg-zinc-100/50 relative overflow-hidden cursor-pointer flex items-center justify-center border border-[#002FA7]/10 group"
                                 onClick={() => setSelectedImage(img)}
                             >
                                 <Image
                                     src={img}
                                     alt={`${artwork.title} - View ${i + 1}`}
                                     fill
-                                    className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                                    className="object-contain p-4 group-hover:scale-[1.02] transition-transform duration-700"
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
                             </div>
