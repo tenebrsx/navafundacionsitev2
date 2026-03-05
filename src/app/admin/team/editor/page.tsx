@@ -14,6 +14,7 @@ import ToggleSwitch from "../../components/ToggleSwitch";
 import { User, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
+import RichTextEditor from "../../components/RichTextEditor";
 
 function TeamEditorContent() {
     const router = useRouter();
@@ -191,14 +192,11 @@ function TeamEditorContent() {
 
                     <FormField
                         label="Bio"
-                        charCount={{ current: formData.bio.length, max: 800 }}
+                        hint="Format the team member biography here"
                     >
-                        <textarea
-                            rows={6}
+                        <RichTextEditor
                             value={formData.bio}
-                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                            className={textareaStyles}
-                            placeholder="Brief biography, background, and expertise..."
+                            onChange={(html) => setFormData({ ...formData, bio: html })}
                         />
                     </FormField>
                 </FormSection>

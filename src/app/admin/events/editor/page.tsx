@@ -11,9 +11,10 @@ import EditorLayout from "../../components/EditorLayout";
 import FormSection from "../../components/FormSection";
 import FormField, { inputStyles, inputStylesLg, textareaStyles } from "../../components/FormField";
 import ToggleSwitch from "../../components/ToggleSwitch";
-import { Image as ImageIcon, Link as LinkIcon, Clock } from "lucide-react";
+import { Image as ImageIcon, Link as LinkIcon, Clock, AlignLeft } from "lucide-react";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
+import RichTextEditor from "../../components/RichTextEditor";
 
 function EventEditorContent() {
     const router = useRouter();
@@ -206,17 +207,14 @@ function EventEditorContent() {
                 </FormSection>
 
                 {/* Description */}
-                <FormSection title="About">
+                <FormSection title="About" icon={<AlignLeft size={14} />}>
                     <FormField
                         label="Description"
-                        charCount={{ current: formData.description.length, max: 1500 }}
+                        hint="Format the event details here"
                     >
-                        <textarea
-                            rows={8}
+                        <RichTextEditor
                             value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className={textareaStyles}
-                            placeholder="Describe the event, featured artists, and what to expect..."
+                            onChange={(html) => setFormData({ ...formData, description: html })}
                         />
                     </FormField>
                 </FormSection>

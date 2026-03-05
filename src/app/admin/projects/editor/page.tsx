@@ -14,6 +14,7 @@ import { X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
+import RichTextEditor from "../../components/RichTextEditor";
 
 function ProjectEditor() {
     const searchParams = useSearchParams();
@@ -35,6 +36,7 @@ function ProjectEditor() {
         gallery: [] as string[],
         category: "Art Fair",
         location: "",
+        content: "",
         featured: false
     });
 
@@ -190,14 +192,25 @@ function ProjectEditor() {
 
                     <FormField
                         label="Description"
+                        hint="A brief summary (Overview)"
                         charCount={{ current: formData.description.length, max: 2000 }}
                     >
                         <textarea
-                            rows={6}
+                            rows={4}
                             value={formData.description}
-                            onChange={e => setFormData({ ...formData, description: e.target.value })}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             className={textareaStyles}
                             placeholder="Describe the project, your approach, and the results..."
+                        />
+                    </FormField>
+
+                    <FormField
+                        label="Content (Details)"
+                        hint="Format the detailed project case study here"
+                    >
+                        <RichTextEditor
+                            value={formData.content}
+                            onChange={(html) => setFormData({ ...formData, content: html })}
                         />
                     </FormField>
                 </FormSection>

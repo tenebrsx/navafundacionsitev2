@@ -83,15 +83,10 @@ export default function ProjectPostDetail({ project }: ProjectPostDetailProps) {
                 {/* Content Column */}
                 <div className="md:col-span-8">
                     <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-6">Details</span>
-                    <div className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none">
-                        {project.content ? (
-                            project.content.split('\n').map((paragraph, idx) => (
-                                <p key={idx} className="mb-6">{paragraph}</p>
-                            ))
-                        ) : (
-                            <p className="opacity-50 italic">Project details are being archived.</p>
-                        )}
-                    </div>
+                    <div
+                        className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none font-sans"
+                        dangerouslySetInnerHTML={{ __html: project.content || '<p class="opacity-50 italic">Project details are being archived.</p>' }}
+                    />
                 </div>
             </div>
 

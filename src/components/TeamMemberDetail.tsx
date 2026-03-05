@@ -67,15 +67,10 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
                         </h1>
                     </div>
 
-                    <div className="prose prose-lg prose-p:text-[#002FA7] prose-p:leading-relaxed max-w-none">
-                        {member.longBio ? (
-                            member.longBio.split('\n').map((para, i) => (
-                                <p key={i}>{para}</p>
-                            ))
-                        ) : (
-                            <div className="whitespace-pre-wrap">{member.bio}</div>
-                        )}
-                    </div>
+                    <div
+                        className="prose prose-lg prose-p:text-[#002FA7] prose-p:leading-relaxed max-w-none"
+                        dangerouslySetInnerHTML={{ __html: member.longBio || member.bio || '<p class="opacity-50 italic">Biography unavailable.</p>' }}
+                    />
                 </div>
 
             </div>
