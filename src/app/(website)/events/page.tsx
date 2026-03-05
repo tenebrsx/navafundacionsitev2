@@ -98,25 +98,30 @@ function MovementsPageContent() {
 
 function EventList({ items }: { items: Event[] }) {
     return (
-        <div className="flex flex-col border-t border-[#002FA7]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
             {items.map((event, index) => (
                 <Link
                     href={`/events/${event.id}`}
                     key={event.id}
-                    className="group flex flex-col md:flex-row md:items-baseline justify-between py-6 border-b border-[#002FA7] hover:bg-[#002FA7] hover:text-white transition-colors duration-300 cursor-pointer px-0 md:px-4 -mx-0 md:-mx-4"
+                    className="group flex flex-col gap-4 cursor-pointer"
                 >
-                    <div className="flex items-baseline gap-4 md:gap-8 w-full md:w-3/4">
-                        <span className="font-mono text-xs md:text-sm w-8 opacity-60 group-hover:opacity-100">0{index + 1}</span>
-                        <div className="flex flex-col md:flex-row md:items-baseline md:gap-8">
-                            <span className="md:w-32 font-mono text-xs md:text-sm uppercase opacity-60 group-hover:opacity-100 mb-2 md:mb-0">{event.date}</span>
-                            <h2 className="text-2xl md:text-3xl group-hover:translate-x-4 transition-transform duration-300">
-                                {event.title}
-                            </h2>
+                    {event.image ? (
+                        <div className="w-full aspect-[4/3] overflow-hidden bg-zinc-100 relative">
+                            <img src={event.image} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         </div>
-                    </div>
-
-                    <div className="hidden md:flex items-center font-mono text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                        View Details →
+                    ) : (
+                        <div className="w-full aspect-[4/3] bg-[#002FA7]/5 flex items-center justify-center font-mono text-xs opacity-50 border border-[#002FA7]/20 relative overflow-hidden group-hover:bg-[#002FA7]/10 transition-colors">
+                            Nava
+                        </div>
+                    )}
+                    <div className="flex flex-col gap-2 pt-4 border-t border-[#002FA7]">
+                        <div className="flex justify-between items-baseline font-mono text-xs md:text-sm uppercase opacity-60">
+                            <span>{event.date}</span>
+                            {event.type && <span>{event.type}</span>}
+                        </div>
+                        <h2 className="text-2xl md:text-3xl leading-[1.1] group-hover:underline decoration-1 underline-offset-4">
+                            {event.title}
+                        </h2>
                     </div>
                 </Link>
             ))}

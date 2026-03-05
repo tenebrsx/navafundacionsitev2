@@ -69,18 +69,26 @@ function BlogPageContent() {
                 {loading && posts.length === 0 ? (
                     <div className="py-24 text-center font-mono text-sm text-[#002FA7] animate-pulse">Loading Journal...</div>
                 ) : (
-                    <StaggeredGrid staggerDelay={0.05}>
+                    <StaggeredGrid staggerDelay={0.05} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
                         {displayPosts.map((post, i) => (
-                            <Link href={`/blog/${post.id}`} key={post.id || i} className="group block">
-                                <div className="flex flex-col md:flex-row justify-between items-start md:items-baseline py-8 border-b border-[#002FA7] hover:bg-[#002FA7] hover:text-white transition-colors duration-300 px-0 md:px-4 -mx-0 md:-mx-4 cursor-pointer">
-                                    <div className="flex flex-col md:flex-row gap-2 md:gap-12 md:items-baseline w-3/4">
-                                        <span className="font-mono text-xs uppercase opacity-50 w-24 flex-shrink-0 group-hover:opacity-80">{post.date}</span>
-                                        <h2 className="text-2xl md:text-3xl group-hover:translate-x-4 transition-transform duration-300">{post.title}</h2>
+                            <Link href={`/blog/${post.id}`} key={post.id || i} className="group flex flex-col gap-4 cursor-pointer">
+                                {post.imageUrl ? (
+                                    <div className="w-full aspect-[4/3] overflow-hidden bg-zinc-100 relative">
+                                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     </div>
-                                    <div className="flex items-center gap-4 mt-4 md:mt-0">
-                                        <span className="font-mono text-xs uppercase tracking-widest opacity-60 group-hover:opacity-100">{post.category}</span>
-                                        <ArrowUpRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                ) : (
+                                    <div className="w-full aspect-[4/3] bg-[#002FA7]/5 flex items-center justify-center font-mono text-xs opacity-50 border border-[#002FA7]/20 relative overflow-hidden group-hover:bg-[#002FA7]/10 transition-colors">
+                                        Nava Journal
                                     </div>
+                                )}
+                                <div className="flex flex-col gap-2 pt-4 border-t border-[#002FA7]">
+                                    <div className="flex justify-between items-baseline font-mono text-xs md:text-sm uppercase opacity-60">
+                                        <span>{post.date}</span>
+                                        {post.category && <span>{post.category}</span>}
+                                    </div>
+                                    <h2 className="text-2xl md:text-3xl leading-[1.1] group-hover:underline decoration-1 underline-offset-4">
+                                        {post.title}
+                                    </h2>
                                 </div>
                             </Link>
                         ))}
