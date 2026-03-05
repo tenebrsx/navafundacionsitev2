@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Share2 } from "lucide-react";
 import MagneticButton from "./anim/MagneticButton";
 
@@ -57,59 +58,49 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24">
-
-                {/* Main Content */}
-                <div className="md:col-span-8">
-                    {post.imageUrl && (
-                        <div className="w-full aspect-video mb-12 border border-[#002FA7]/20 overflow-hidden">
-                            <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" />
-                        </div>
-                    )}
-
-                    <div className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none">
-                        {/* 
-                            Assuming content is plain text or HTML for now. 
-                            If plain text, we might want to wrap in paragraphs.
-                            If using a CMS rich text, we'd use a parser.
-                            For simplicity, rendering as is or splitting by newlines.
-                        */}
-                        {post.content ? (
-                            post.content.split('\n').map((paragraph, idx) => (
-                                <p key={idx} className="mb-6">{paragraph}</p>
-                            ))
-                        ) : (
-                            <p className="opacity-50 italic">[No content available]</p>
-                        )}
-                    </div>
+            {/* Hero Image — full width at the top */}
+            {post.imageUrl && (
+                <div className="w-full aspect-[16/9] md:aspect-[21/9] mb-12 border border-[#002FA7]/10 overflow-hidden relative">
+                    <Image
+                        src={post.imageUrl}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="100vw"
+                        priority
+                    />
                 </div>
+            )}
 
-                {/* Sidebar / Related */}
-                <div className="md:col-span-4 space-y-12">
-                    <div className="border-t border-[#002FA7] pt-4">
-                        <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-6">About the Category</span>
-                        <p className="text-sm leading-relaxed opacity-80">
-                            This post is part of our {post.category} series, exploring the intersections of Caribbean identity, archival practice, and contemporary art.
-                        </p>
-                    </div>
-
-                    {relatedPosts.length > 0 && (
-                        <div className="border-t border-[#002FA7] pt-4">
-                            <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-6">Read Next</span>
-                            <div className="flex flex-col gap-6">
-                                {relatedPosts.map(p => (
-                                    <Link href={`/blog/${p.id}`} key={p.id} className="group block">
-                                        <span className="font-mono text-xs opacity-50 block mb-1">{p.date}</span>
-                                        <h3 className="text-xl leading-tight group-hover:underline underline-offset-4 decoration-1">
-                                            {p.title}
-                                        </h3>
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
+            {/* Article Content */}
+            <div className="max-w-3xl">
+                <div className="prose prose-lg prose-headings:font-normal prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-p:text-[#002FA7] prose-p:leading-relaxed prose-headings:text-[#002FA7] max-w-none">
+                    {post.content ? (
+                        post.content.split('\n').map((paragraph, idx) => (
+                            <p key={idx} className="mb-6">{paragraph}</p>
+                        ))
+                    ) : (
+                        <p className="opacity-50 italic">[No content available]</p>
                     )}
                 </div>
             </div>
+
+            {/* Read Next */}
+            {relatedPosts.length > 0 && (
+                <div className="border-t border-[#002FA7] pt-8 mt-16">
+                    <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-6">Read Next</span>
+                    <div className="flex flex-col gap-6">
+                        {relatedPosts.map(p => (
+                            <Link href={`/blog/${p.id}`} key={p.id} className="group block">
+                                <span className="font-mono text-xs opacity-50 block mb-1">{p.date}</span>
+                                <h3 className="text-xl leading-tight group-hover:underline underline-offset-4 decoration-1">
+                                    {p.title}
+                                </h3>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
         </article>
     );
 }

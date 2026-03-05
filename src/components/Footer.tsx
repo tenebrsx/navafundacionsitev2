@@ -4,24 +4,7 @@ import NavaLogo from "@/components/anim/NavaLogo";
 export default function Footer() {
     return (
         <footer className="bg-white text-[#002FA7] border-t border-[#002FA7] px-4 md:px-6 py-12 md:py-20">
-            <div className="max-w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-
-                {/* About Section */}
-                <div className="flex flex-col gap-6">
-                    <div className="flex items-center gap-4">
-                        <div className="relative w-12 h-12">
-                            <NavaLogo color="#002FA7" />
-                        </div>
-                        <h3 className="text-2xl md:text-3xl font-medium uppercase tracking-tight">About Nava</h3>
-                    </div>
-                    <div className="w-full h-px bg-[#002FA7]/20 relative overflow-hidden">
-                        {/* Decorative squiggle or line */}
-                        <div className="absolute top-0 left-0 w-full h-full bg-[url('/squiggle.svg')] bg-repeat-x opacity-20"></div>
-                    </div>
-                    <p className="text-lg leading-relaxed max-w-md">
-                        Nava Fundacion is a platform for alternative narratives in the Dominican Republic.
-                    </p>
-                </div>
+            <div className="max-w-full mx-auto flex flex-col gap-8">
 
                 {/* Contacts Section */}
                 <div className="flex flex-col gap-6">
@@ -34,10 +17,14 @@ export default function Footer() {
                     <div className="flex gap-4 mt-8 text-sm uppercase font-medium">
                         <Link href="https://www.instagram.com/nava_fundacion/" target="_blank" rel="noopener noreferrer" className="hover:underline">Instagram</Link>
                     </div>
+                </div>
 
-                    <div className="mt-8 opacity-50 text-xs">
-                        <p>© 2026 Nava Fundacion</p>
+                {/* Copyright */}
+                <div className="flex items-center gap-3 mt-4 opacity-50 text-xs">
+                    <div className="relative w-8 h-8">
+                        <NavaLogo color="#002FA7" />
                     </div>
+                    <p>© 2026 Nava Fundacion</p>
                 </div>
 
             </div>
