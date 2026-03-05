@@ -27,6 +27,7 @@ import SmoothScroll from "@/components/anim/SmoothScroll";
 import CustomCursor from "@/components/anim/CustomCursor";
 import NoiseOverlay from "@/components/anim/NoiseOverlay";
 import LoadingScreen from "@/components/LoadingScreen";
+import PageTransition from "@/components/PageTransition";
 
 export default function RootLayout({
   children,
@@ -37,6 +38,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${ibmPlexSerif.variable}`}>
       <body className="antialiased bg-[#F4F4F2] text-[#002FA7] md:cursor-none">
         <LoadingScreen />
+        <PageTransition />
         <SmoothScroll>
           <NoiseOverlay />
           <CustomCursor />

@@ -8,14 +8,7 @@ import MagneticButton from "@/components/anim/MagneticButton";
 import Image from "next/image";
 
 export default function HomeExhibition() {
-    // Default to placeholder data initially to prevent layout shift or empty space
-    const [exhibition, setExhibition] = useState<any>({
-        id: "placeholder",
-        title: "Echoes of the Unseen",
-        description: "A curatorial exploration of silence and space in post-digital Caribbean aesthetics.",
-        image: null,
-        isPlaceholder: true
-    });
+    const [exhibition, setExhibition] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -35,7 +28,6 @@ export default function HomeExhibition() {
                         setExhibition({
                             id: snapshotFeatured.docs[0].id,
                             ...snapshotFeatured.docs[0].data(),
-                            isPlaceholder: false
                         });
                         setLoading(false);
                         return;
@@ -57,7 +49,6 @@ export default function HomeExhibition() {
                     setExhibition({
                         id: snapshot.docs[0].id,
                         ...snapshot.docs[0].data(),
-                        isPlaceholder: false
                     });
                 }
             } catch (error) {
@@ -70,7 +61,20 @@ export default function HomeExhibition() {
         fetchExhibition();
     }, []);
 
-    const linkHref = exhibition.isPlaceholder ? "/current-exhibition" : `/events/${exhibition.id}`;
+    // Skeleton while loading
+    if (loading || !exhibition) {
+        return (
+            <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
+                <div className="w-full md:w-1/3 flex flex-col gap-4">
+                    <span className="font-mono text-xs uppercase tracking-widest block opacity-50">On View</span>
+                    <div className="h-10 w-3/4 bg-[#002FA7]/5 animate-pulse"></div>
+                    <div className="h-4 w-full bg-[#002FA7]/5 animate-pulse mt-4"></div>
+                    <div className="h-4 w-2/3 bg-[#002FA7]/5 animate-pulse"></div>
+                </div>
+                <div className="w-full md:w-2/3 h-[400px] md:h-[600px] bg-[#E5E5E0] animate-pulse border border-[#002FA7]/10"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
@@ -100,7 +104,7 @@ export default function HomeExhibition() {
 
                 <div className="absolute bottom-6 right-6">
                     <MagneticButton>
-                        <Link href={linkHref}>
+                        <Link href={`/events/${exhibition.id}`}>
                             <button className="bg-white text-[#002FA7] px-6 py-3 rounded-full uppercase text-xs tracking-widest font-bold hover:bg-[#002FA7] hover:text-white transition-colors">
                                 View Exhibition
                             </button>

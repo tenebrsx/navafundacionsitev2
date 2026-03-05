@@ -9,19 +9,12 @@ import MagneticButton from "@/components/anim/MagneticButton";
 import Image from "next/image";
 
 export default function HomeJournal() {
-    // Default to placeholder data initially to prevent layout shift or empty space
-    const [post, setPost] = useState<any>({
-        id: "placeholder",
-        title: "Theory of Form",
-        image: null,
-        isPlaceholder: true
-    });
+    const [post, setPost] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                // Fetch latest post
                 const q = query(
                     collection(db, "posts"),
                     orderBy("date", "desc"),
@@ -33,7 +26,6 @@ export default function HomeJournal() {
                     setPost({
                         id: snapshot.docs[0].id,
                         ...snapshot.docs[0].data(),
-                        isPlaceholder: false
                     });
                 }
             } catch (error) {
@@ -46,7 +38,18 @@ export default function HomeJournal() {
         fetchPost();
     }, []);
 
-    const linkHref = post.isPlaceholder ? "/blog" : `/blog/${post.id}`;
+    // Skeleton while loading
+    if (loading || !post) {
+        return (
+            <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row-reverse gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
+                <div className="w-full md:w-1/3 flex flex-col items-end gap-4">
+                    <span className="font-mono text-xs uppercase tracking-widest block opacity-50">Journal</span>
+                    <div className="h-10 w-3/4 bg-[#002FA7]/5 animate-pulse"></div>
+                </div>
+                <div className="w-full md:w-2/3 h-[300px] md:h-[400px] bg-[#F0F0F0] animate-pulse border border-[#002FA7]/10"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row-reverse gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
@@ -58,7 +61,7 @@ export default function HomeJournal() {
                     </h2>
                 </div>
                 <MagneticButton>
-                    <Link href={linkHref} className="flex items-center gap-2 group mt-8">
+                    <Link href={`/blog/${post.id}`} className="flex items-center gap-2 group mt-8">
                         <span className="uppercase tracking-widest text-xs font-bold text-[#002FA7] group-hover:underline decoration-1 underline-offset-4">Read Article</span>
                         <ArrowUpRight size={16} className="text-[#002FA7]" />
                     </Link>
