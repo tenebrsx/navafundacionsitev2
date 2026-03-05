@@ -90,7 +90,7 @@ export default function HomeExhibition() {
                 </p>
             </div>
 
-            <div className="w-full md:w-2/3 h-[400px] md:h-[600px] bg-[#E5E5E0] relative overflow-hidden group border border-[#002FA7]/10">
+            <Link href={`/events/${exhibition.id}`} className="block w-full md:w-2/3 h-[400px] md:h-[600px] bg-[#E5E5E0] relative overflow-hidden group border border-[#002FA7]/10 cursor-pointer">
                 {exhibition.image && (
                     <Image
                         src={exhibition.image}
@@ -104,14 +104,12 @@ export default function HomeExhibition() {
 
                 <div className="absolute bottom-6 right-6">
                     <MagneticButton>
-                        <Link href={`/events/${exhibition.id}`}>
-                            <button className="bg-white text-[#002FA7] px-6 py-3 rounded-full uppercase text-xs tracking-widest font-bold hover:bg-[#002FA7] hover:text-white transition-colors">
-                                View Exhibition
-                            </button>
-                        </Link>
+                        <div className="bg-white text-[#002FA7] px-6 py-3 rounded-full uppercase text-xs tracking-widest font-bold hover:bg-[#002FA7] hover:text-white transition-colors">
+                            View Exhibition
+                        </div>
                     </MagneticButton>
                 </div>
-            </div>
+            </Link>
         </div>
     );
 }

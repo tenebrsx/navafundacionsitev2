@@ -68,18 +68,18 @@ export default function HomeJournal() {
                 </MagneticButton>
             </div>
 
-            <div className="w-full md:w-2/3 aspect-[4/3] md:aspect-[3/2] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10 overflow-hidden">
+            <Link href={`/blog/${post.id}`} className="block w-full md:w-2/3 aspect-[4/3] md:aspect-[3/2] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10 overflow-hidden cursor-pointer group">
                 {post.image || post.imageUrl ? (
                     <Image
                         src={post.image || post.imageUrl}
                         alt={post.title}
                         fill
-                        className="object-cover hover:scale-105 transition-transform duration-700"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                 ) : (
                     <span className="font-mono text-xs opacity-30 text-[#002FA7]">Editorial Image Placeholder</span>
                 )}
-            </div>
+            </Link>
         </div>
     );
 }

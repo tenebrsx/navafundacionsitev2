@@ -61,12 +61,12 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
 
             {/* Hero Image — full width at the top */}
             {(post.image || post.imageUrl) && (
-                <div className="w-full aspect-[16/9] md:aspect-[21/9] mb-12 border border-[#002FA7]/10 overflow-hidden relative">
+                <div className="w-full aspect-[4/3] md:aspect-[3/2] mb-12 border border-[#002FA7]/10 overflow-hidden relative bg-[#E5E5E0]">
                     <Image
                         src={(post.image || post.imageUrl)!}
                         alt={post.title}
                         fill
-                        className="object-cover"
+                        className="object-cover object-top md:object-center"
                         sizes="100vw"
                         priority
                     />
