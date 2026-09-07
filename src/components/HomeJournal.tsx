@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import MagneticButton from "@/components/anim/MagneticButton";
 import Image from "next/image";
+import { contentPath } from "@/lib/slug";
 
 export default function HomeJournal() {
     const [post, setPost] = useState<any>(null);
@@ -38,18 +39,19 @@ export default function HomeJournal() {
         fetchPost();
     }, []);
 
-    // Skeleton while loading
     if (loading || !post) {
         return (
             <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row-reverse gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
                 <div className="w-full md:w-1/3 flex flex-col items-end gap-4">
                     <span className="font-mono text-xs uppercase tracking-widest block opacity-50">Journal</span>
-                    <div className="h-10 w-3/4 bg-[#002FA7]/5 animate-pulse"></div>
+                    <div className="h-10 w-3/4 bg-[#002FA7]/5 animate-pulse" />
                 </div>
-                <div className="w-full md:w-2/3 h-[300px] md:h-[400px] bg-[#F0F0F0] animate-pulse border border-[#002FA7]/10"></div>
+                <div className="w-full md:w-2/3 h-[300px] md:h-[400px] bg-[#F0F0F0] animate-pulse border border-[#002FA7]/10" />
             </div>
         );
     }
+
+    const href = contentPath("blog", post);
 
     return (
         <div className="py-12 md:py-24 border-b border-[#002FA7] flex flex-col md:flex-row-reverse gap-8 md:gap-12 px-4 sm:px-12 md:px-24">
@@ -61,14 +63,19 @@ export default function HomeJournal() {
                     </h2>
                 </div>
                 <MagneticButton>
-                    <Link href={`/blog/${post.id}`} className="flex items-center gap-2 group mt-8">
-                        <span className="uppercase tracking-widest text-xs font-bold text-[#002FA7] group-hover:underline decoration-1 underline-offset-4">Read Article</span>
+                    <Link href={href} className="flex items-center gap-2 group mt-8">
+                        <span className="uppercase tracking-widest text-xs font-bold text-[#002FA7] group-hover:underline decoration-1 underline-offset-4">
+                            Read Article
+                        </span>
                         <ArrowUpRight size={16} className="text-[#002FA7]" />
                     </Link>
                 </MagneticButton>
             </div>
 
-            <Link href={`/blog/${post.id}`} className="block w-full md:w-2/3 aspect-[4/3] md:aspect-[3/2] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10 overflow-hidden cursor-pointer group">
+            <Link
+                href={href}
+                className="block w-full md:w-2/3 aspect-[4/3] md:aspect-[3/2] bg-[#F0F0F0] relative flex items-center justify-center border border-[#002FA7]/10 overflow-hidden cursor-pointer group"
+            >
                 {post.image || post.imageUrl ? (
                     <Image
                         src={post.image || post.imageUrl}
@@ -77,7 +84,9 @@ export default function HomeJournal() {
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                 ) : (
-                    <span className="font-mono text-xs opacity-30 text-[#002FA7]">Editorial Image Placeholder</span>
+                    <span className="font-mono text-xs opacity-30 text-[#002FA7]">
+                        Editorial Image Placeholder
+                    </span>
                 )}
             </Link>
         </div>

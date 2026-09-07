@@ -14,6 +14,32 @@ import { FileText, Image as ImageIcon, Search, User } from "lucide-react";
 import RichTextEditor from "../../components/RichTextEditor";
 
 import { useAutoSave } from "@/hooks/useAutoSave";
+import { stripHtml, plainExcerpt } from "@/lib/stripHtml";
+import { slugify } from "@/lib/slug";
+
+function sanitizePostFields<T extends {
+    title: string;
+    excerpt: string;
+    content: string;
+    seoTitle: string;
+    seoDescription: string;
+    slug?: string;
+}>(data: T, { fillDefaults = false }: { fillDefaults?: boolean } = {}): T {
+    const excerpt = stripHtml(data.excerpt);
+    const seoDescription = stripHtml(data.seoDescription);
+    const slug =
+        slugify(data.slug) || slugify(data.title) || "";
+
+    return {
+        ...data,
+        slug,
+        excerpt: fillDefaults ? (excerpt || plainExcerpt(data.content, 300)) : excerpt,
+        seoDescription: fillDefaults
+            ? (seoDescription || plainExcerpt(excerpt || data.content, 160))
+            : seoDescription,
+        seoTitle: (data.seoTitle || "").trim(),
+    };
+}
 
 function BlogPostEditorContent() {
     const searchParams = useSearchParams();
@@ -34,6 +60,7 @@ function BlogPostEditorContent() {
         content: "",
         seoTitle: "",
         seoDescription: "",
+        slug: "",
         featured: false,
         status: "draft"
     });
@@ -47,7 +74,16 @@ function BlogPostEditorContent() {
                 const docRef = doc(db, "posts", paramId);
                 const snap = await getDoc(docRef);
                 if (snap.exists()) {
-                    setFormData({ featured: false, status: "draft", ...snap.data() } as any);
+                    const data = snap.data();
+                    setFormData({
+                        featured: false,
+                        status: "draft",
+                        ...data,
+                        excerpt: stripHtml(data.excerpt),
+                        seoDescription: stripHtml(data.seoDescription),
+                        seoTitle: (data.seoTitle || "").trim(),
+                        slug: data.slug || slugify(data.title),
+                    } as any);
                 }
                 setFetching(false);
             };
@@ -61,7 +97,11 @@ function BlogPostEditorContent() {
 
         try {
             const now = new Date().toISOString();
-            const payload = { ...formData, status: "published", updatedAt: now };
+            const payload = {
+                ...sanitizePostFields(formData, { fillDefaults: true }),
+                status: "published",
+                updatedAt: now,
+            };
 
             const activeId = docId || paramId;
 
@@ -154,6 +194,31 @@ function BlogPostEditorContent() {
             >
                 {/* SEO Settings (New Section Above Content) */}
                 <FormSection title="SEO Settings" icon={<Search size={14} />}>
+                    <FormField
+                        label="URL Slug"
+                        hint="Used in /blog/your-slug — auto-generated from title if empty"
+                    >
+                        <input
+                            type="text"
+                            value={formData.slug || ""}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    slug: slugify(e.target.value),
+                                })
+                            }
+                            onBlur={() => {
+                                if (!formData.slug && formData.title) {
+                                    setFormData({
+                                        ...formData,
+                                        slug: slugify(formData.title),
+                                    });
+                                }
+                            }}
+                            className={inputStyles}
+                            placeholder="madrid-art-week"
+                        />
+                    </FormField>
                     <FormField
                         label="SEO Title"
                         hint="Optimized title for search engines (defaults to Post Title if empty)"

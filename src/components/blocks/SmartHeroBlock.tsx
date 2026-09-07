@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase";
 import Link from "next/link";
 import InlineText from "../admin/visual/InlineText";
 import { useVisualEditor } from "../admin/visual/VisualEditorContext";
+import { plainExcerpt } from "@/lib/stripHtml";
 
 export default function SmartHeroBlock({ data }: { data: any }) {
     const { isEditing } = useVisualEditor();
@@ -34,7 +35,7 @@ export default function SmartHeroBlock({ data }: { data: any }) {
     // If data.title is set (via inline edit), use it. Else use smart title.
     const smartProps = currentOrFuture ? {
         title: currentOrFuture.title,
-        subtitle: currentOrFuture.description,
+        subtitle: plainExcerpt(currentOrFuture.description, 160),
         image: currentOrFuture.imageUrl,
         category: "Current Exhibition",
         link: `/events/${currentOrFuture.id}`

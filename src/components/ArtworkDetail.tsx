@@ -24,16 +24,29 @@ interface Artwork {
     status: string;
 }
 
-export default function ArtworkDetail({ id: propId }: { id: string }) {
-    const [artwork, setArtwork] = useState<Artwork | null>(null);
-    const [loading, setLoading] = useState(true);
+export default function ArtworkDetail({
+    id: propId,
+    artwork: initialArtwork,
+}: {
+    id?: string;
+    artwork?: Artwork;
+}) {
+    const [artwork, setArtwork] = useState<Artwork | null>(initialArtwork ?? null);
+    const [loading, setLoading] = useState(!initialArtwork);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     useEffect(() => {
-        // Read the real ID from the URL path (Firebase rewrite may serve a fallback page
-        // where the server-rendered prop doesn't match the actual requested ID).
+        if (initialArtwork) {
+            setArtwork(initialArtwork);
+            setLoading(false);
+            return;
+        }
+
         const segments = window.location.pathname.split("/").filter(Boolean);
-        const realId = segments.length >= 2 && segments[0] === "catalog" ? segments[1] : propId;
+        const realId =
+            segments.length >= 2 && segments[0] === "catalog"
+                ? segments[1]
+                : propId;
 
         const fetchArtwork = async () => {
             if (!realId) return;
@@ -51,7 +64,7 @@ export default function ArtworkDetail({ id: propId }: { id: string }) {
             }
         };
         fetchArtwork();
-    }, [propId]);
+    }, [propId, initialArtwork]);
 
     const handleShare = async () => {
         const url = window.location.href;

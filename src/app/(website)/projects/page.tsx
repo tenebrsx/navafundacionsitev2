@@ -8,6 +8,7 @@ import StaggeredGrid from "@/components/anim/StaggeredGrid";
 import ScrollRevealText from "@/components/anim/ScrollRevealText";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { contentPath } from "@/lib/slug";
 
 interface Project {
     id: string;
@@ -110,7 +111,7 @@ function ProjectsPageContent() {
                     {view === "grid" ? (
                         <StaggeredGrid className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 md:gap-y-24" staggerDelay={0.05}>
                             {displayProjects.map((project) => (
-                                <Link href={`/projects/${project.id}`} key={project.id} className="group cursor-pointer flex flex-col gap-4 block">
+                                <Link href={contentPath("projects", project)} key={project.id} className="group cursor-pointer flex flex-col gap-4 block">
                                     {/* Image Area */}
                                     <div className={`w-full aspect-[4/3] bg-zinc-100 relative overflow-hidden border border-[#002FA7]/10`}>
                                         {project.imageUrl && <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />}
@@ -141,7 +142,7 @@ function ProjectsPageContent() {
                     ) : (
                         <div className="border-t border-[#002FA7]">
                             {displayProjects.map((project, i) => (
-                                <Link href={`/projects/${project.id}`} key={project.id} className="block">
+                                <Link href={contentPath("projects", project)} key={project.id} className="block">
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
                                         whileInView={{ opacity: 1, y: 0 }}

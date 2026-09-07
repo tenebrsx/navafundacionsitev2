@@ -6,6 +6,7 @@ import { db } from "@/lib/firebase";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ScrollRevealText from "@/components/anim/ScrollRevealText";
+import { contentPath } from "@/lib/slug";
 
 interface Event {
     id: string;
@@ -101,7 +102,7 @@ function EventList({ items }: { items: Event[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
             {items.map((event, index) => (
                 <Link
-                    href={`/events/${event.id}`}
+                    href={contentPath("events", event)}
                     key={event.id}
                     className="group flex flex-col gap-4 cursor-pointer"
                 >

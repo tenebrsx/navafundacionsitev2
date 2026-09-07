@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, limit, orderBy } from "firebase/fire
 import { db } from "@/lib/firebase";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { contentPath } from "@/lib/slug";
 
 const STATIC_EVENTS = [
     {
@@ -78,7 +79,7 @@ export default function HomePrograms() {
 
             <div className="border-t border-[#002FA7]">
                 {events.map((item) => (
-                    <Link href={`/events/${item.id}`} key={item.id} className="group flex flex-col md:flex-row justify-between items-start md:items-center py-6 border-b border-[#002FA7] hover:bg-[#002FA7] hover:text-white px-0 md:px-4 transition-colors cursor-pointer -mx-0 md:-mx-4">
+                    <Link href={contentPath("events", item)} key={item.id} className="group flex flex-col md:flex-row justify-between items-start md:items-center py-6 border-b border-[#002FA7] hover:bg-[#002FA7] hover:text-white px-0 md:px-4 transition-colors cursor-pointer -mx-0 md:-mx-4">
                         <div className="flex flex-col md:flex-row gap-2 md:gap-8 md:items-baseline">
                             <span className="font-mono text-xs opacity-50 group-hover:opacity-80 w-24 uppercase">
                                 {t(item.type || "Event", item.type_es || "Evento")}

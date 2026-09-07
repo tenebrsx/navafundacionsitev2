@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { plainExcerpt } from "@/lib/stripHtml";
+import { contentPath } from "@/lib/slug";
 
 interface Event {
     id: string;
@@ -14,6 +18,8 @@ interface Event {
     type?: string;
     type_es?: string;
     artist?: string;
+    location?: string;
+    slug?: string;
 }
 
 interface EventDetailProps {
@@ -98,12 +104,12 @@ export default function EventDetail({ event, upcomingEvents = [], backLink = "/e
                             </div>
                             <div className="flex flex-col gap-6">
                                 {upcomingEvents.map((item) => (
-                                    <Link key={item.id} href={`/events/${item.id}`} className="group cursor-pointer block">
+                                    <Link key={item.id} href={contentPath("events", item)} className="group cursor-pointer block">
                                         <span className="block font-mono text-xs text-[#002FA7] mb-1">{item.date}</span>
                                         <h3 className="text-xl font-bold uppercase leading-tight group-hover:underline decoration-1 underline-offset-4 text-[#002FA7]">
                                             {item.title}
                                         </h3>
-                                        <p className="text-xs text-[#002FA7]/60 mt-1 line-clamp-1">{item.description}</p>
+                                        <p className="text-xs text-[#002FA7]/60 mt-1 line-clamp-1">{plainExcerpt(item.description, 120)}</p>
                                     </Link>
                                 ))}
                             </div>

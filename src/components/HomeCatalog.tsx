@@ -6,11 +6,13 @@ import { db } from "@/lib/firebase";
 import Link from "next/link";
 import Image from "next/image";
 import MagneticButton from "@/components/anim/MagneticButton";
+import { contentPath } from "@/lib/slug";
 
 interface CatalogItem {
     id: string;
     title: string;
     mainImage: string;
+    slug?: string;
 }
 
 export default function HomeCatalog() {
@@ -109,7 +111,7 @@ export default function HomeCatalog() {
                     {marqueeItems.map((item, i) => (
                         <Link
                             key={`${item.id}-${i}`}
-                            href={`/catalog/${item.id}`}
+                            href={contentPath("catalog", item)}
                             className="flex-shrink-0 w-[140px] md:w-[180px] lg:w-[220px] aspect-[3/4] relative overflow-hidden bg-zinc-100 group"
                             draggable={false}
                         >

@@ -6,6 +6,7 @@ import { db } from "@/lib/firebase";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { contentPath } from "@/lib/slug";
 
 interface Artwork {
     id: string;
@@ -120,7 +121,7 @@ export default function CatalogClient() {
                 {artworks.map((artwork) => (
                     <motion.div key={artwork.id} variants={item}>
                         <Link
-                            href={`/catalog/${artwork.id}`}
+                            href={contentPath("catalog", artwork)}
                             className="group block"
                         >
                             {/* Image */}

@@ -6,6 +6,8 @@ import { db } from "@/lib/firebase";
 import Link from "next/link";
 import MagneticButton from "@/components/anim/MagneticButton";
 import Image from "next/image";
+import { plainExcerpt } from "@/lib/stripHtml";
+import { contentPath } from "@/lib/slug";
 
 export default function HomeExhibition() {
     const [exhibition, setExhibition] = useState<any>(null);
@@ -86,11 +88,11 @@ export default function HomeExhibition() {
                     </h2>
                 </div>
                 <p className="mt-8 text-sm md:text-base leading-relaxed opacity-80 max-w-xs font-sans line-clamp-4">
-                    {exhibition.description || "No description available."}
+                    {plainExcerpt(exhibition.description, 280) || "No description available."}
                 </p>
             </div>
 
-            <Link href={`/events/${exhibition.id}`} className="block w-full md:w-2/3 h-[400px] md:h-[600px] bg-[#E5E5E0] relative overflow-hidden group border border-[#002FA7]/10 cursor-pointer">
+            <Link href={contentPath("events", exhibition)} className="block w-full md:w-2/3 h-[400px] md:h-[600px] bg-[#E5E5E0] relative overflow-hidden group border border-[#002FA7]/10 cursor-pointer">
                 {exhibition.image && (
                     <Image
                         src={exhibition.image}

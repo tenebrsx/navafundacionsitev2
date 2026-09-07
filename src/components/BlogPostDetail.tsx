@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Share2 } from "lucide-react";
 import MagneticButton from "./anim/MagneticButton";
+import { contentPath } from "@/lib/slug";
 
 interface Post {
     id: string;
@@ -14,6 +15,7 @@ interface Post {
     image?: string;
     imageUrl?: string;
     author?: string;
+    slug?: string;
 }
 
 interface BlogPostDetailProps {
@@ -89,7 +91,7 @@ export default function BlogPostDetail({ post, relatedPosts = [] }: BlogPostDeta
                     <span className="font-mono text-xs uppercase tracking-widest opacity-60 block mb-8 text-center">More from the Journal</span>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {relatedPosts.slice(0, 3).map(p => (
-                            <Link href={`/blog/${p.id}`} key={p.id} className="group flex flex-col gap-4 cursor-pointer">
+                            <Link href={contentPath("blog", p)} key={p.id} className="group flex flex-col gap-4 cursor-pointer">
                                 {p.image || p.imageUrl ? (
                                     <div className="w-full aspect-[4/3] overflow-hidden bg-zinc-100 relative">
                                         <Image

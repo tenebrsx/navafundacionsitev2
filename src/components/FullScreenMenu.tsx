@@ -44,8 +44,9 @@ export default function FullScreenMenu({ onClose }: FullScreenMenuProps) {
         { label: "Projects", href: "/projects" },
         { label: "Catalog", href: "/catalog" },
         { label: "Team", href: "/team" },
-        { label: "Blog", href: "/blog" },
+        { label: "Journal", href: "/blog" },
         { label: "Events", href: "/events" },
+        { label: "About", href: "/about" },
         { label: "Our Story", href: "/story" },
     ];
 
